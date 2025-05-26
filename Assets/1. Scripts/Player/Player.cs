@@ -25,15 +25,15 @@ public class Player : MonoBehaviour
         rigidbody.MovePosition(this.transform.position + move * moveSpeed * Time.deltaTime);
     }
     
-    private void OnMove(InputAction.CallbackContext context)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.phase == InputActionPhase.Performed)
             moveInput = context.ReadValue<Vector2>();
-        else if (context.canceled)
+        else if (context.phase == InputActionPhase.Canceled)
             moveInput = Vector2.zero;
     }
 
-    private void OnJump(InputAction.CallbackContext context)
+    public void OnJump(InputAction.CallbackContext context)
     {
         if (context.started)
             rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
