@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
+  m_Name: Shield
+  m_EditorClassIdentifier: 
+  id: 205
+  itemName: "\uBC29\uD328"
+  description: "\uC801\uC758 \uACF5\uACA9\uC744 \uB9C9\uC544\uC8FC\uB294 \uBC29\uD328\uC785\uB2C8\uB2E4."
+  type: 1
+  icon: {fileID: 21300000, guid: eaafdf534ca187b4a8aac88e07a0b9b4, type: 3}
+  dropPrefab: {fileID: 6422607227368735424, guid: cbcd6d37e4dfe0c49ba1c6e1b051d47e, type: 3}
+  canStack: 0
+  maxAmount: 0
+  buffs:
+  - type: 1
+    value: 2
+    hasDuration: 0
+    duration: 0
+  - type: 5
+    value: 5
+    hasDuration: 0
+    duration: 0
