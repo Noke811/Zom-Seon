@@ -28,7 +28,7 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void Start()
     {
         CharacterManager.Instance.Player.info = this;
     }

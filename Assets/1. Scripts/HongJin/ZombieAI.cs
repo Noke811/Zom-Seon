@@ -78,7 +78,7 @@ public class ZombieAI : MonoBehaviour
 
         // 이동 여부 → 애니메이션 제어
         bool isMoving = agent.velocity.magnitude > 0.25f;
-        animator.SetBool("IsMoving", isMoving);
+        animator.SetBool("isRun", isMoving);
 
         // 밤 → 낮으로 전환된 경우 배회 상태로 되돌림
         if (!isNight && wasNight)
