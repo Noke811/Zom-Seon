@@ -14,15 +14,15 @@ public class Player : MonoBehaviour
     private bool _isGround;
 
     [Header("Looking")]
+    public Transform cameraContainer;
     public float sensitive;
-    
-    private Camera _camera;
+    private Vector2 mouseDelta;
+    public float camCurXRot;
     
     
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
-        _camera = Camera.main;
         Cursor.lockState = CursorLockMode.Locked;
     }
 	
@@ -31,11 +31,25 @@ public class Player : MonoBehaviour
         Move();
     }
 
+    private void LateUpdate()
+    {
+        Look();
+    }
+
     private void Move()
     {
-        Vector3 move = new Vector3(_moveInput.x, 0, _moveInput.y);
+        Vector3 moveInput = new Vector3(_moveInput.x, 0, _moveInput.y);
         float moveTime = moveSpeed * Time.deltaTime;
-        rigidbody.MovePosition(transform.position + move * moveTime);
+        rigidbody.MovePosition(transform.position + moveInput * moveTime);
+    }
+
+    private void Look()
+    {
+        camCurXRot += mouseDelta.y * sensitive;
+        camCurXRot = Mathf.Clamp(camCurXRot, -90, 90);
+        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
+        
+        transform.eulerAngles += new Vector3(0, mouseDelta.x * sensitive, 0);
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -46,12 +60,18 @@ public class Player : MonoBehaviour
             _moveInput = Vector2.zero;
     }
 
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        mouseDelta = context.ReadValue<Vector2>();
+    }
+
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.started && _isGround)
             rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
+    // IsGround Ray
     // private bool IsGround()
     // {
     //     Ray[] rays = new Ray[4]
