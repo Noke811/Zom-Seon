@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a7ae04163363f49b39041cd53625b2, type: 3}
   m_Name: Test1
   m_EditorClassIdentifier: 
-  itemName: 
-  itemSprite: {fileID: 0}
-  itemPrefab: {fileID: 0}
-  isPlaceable: 0
+  itemName: "Test\uBD88"
+  itemSprite: {fileID: 21300000, guid: 0b1d37c988c0be9498fb85da84d6873a, type: 3}
+  itemPrefab: {fileID: 919132149155446097, guid: ae56f5d4b256d074b8f455ca36344ee9, type: 3}
+  isPlaceable: 1
   canBuildableTags: []
   isTool: 0
