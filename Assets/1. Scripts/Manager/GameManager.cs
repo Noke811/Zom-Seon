@@ -15,8 +15,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    UIManager uiManager;
-    public UIManager UIManager => uiManager;
+    public UIManager UIManager { get; private set; }
+    public Transform Player { get; private set; }
+
+    [Header("Time Control")]
+    public bool IsNight = false;
 
     private void Awake()
     {
@@ -34,10 +37,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    #region Initialization
-    public void Init(UIManager _uiManager)
+    private void Start()
     {
-        uiManager = _uiManager;
+        Player = GameObject.FindWithTag("Player")?.transform;
+    }
+
+    private void Update()
+    {
+        // 테스트용: N 키를 눌러 밤/낮 전환
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            IsNight = !IsNight;
+            Debug.Log(IsNight ? "밤이 되었습니다" : "낮이 되었습니다");
+        }
+    }
+
+    #region Initialization
+    public void Init(UIManager uiManager)
+    {
+        UIManager = uiManager;
     }
     #endregion
 }
