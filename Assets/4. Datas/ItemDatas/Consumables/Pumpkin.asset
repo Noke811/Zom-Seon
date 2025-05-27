@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Pumpkin
   m_EditorClassIdentifier: 
+  id: 308
   itemName: "\uD638\uBC15"
   description: "\uD2B8\uB9AD \uC624\uC5B4 \uD2B8\uB9AC\uD2B8!"
   type: 2

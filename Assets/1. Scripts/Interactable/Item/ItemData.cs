@@ -39,6 +39,8 @@ public class Buff
 public class ItemData : ScriptableObject
 {
     [Header("Item Info")]
+    [SerializeField] int id;
+    public int Id => id;
     [SerializeField] string itemName;
     public string ItemName => itemName;
     [SerializeField] string description;

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Hoe
   m_EditorClassIdentifier: 
+  id: 203
   itemName: "\uAD2D\uC774"
   description: "\uB18D\uC0AC\uB97C \uC9C0\uC744 \uC218 \uC788\uB294 \uAD2D\uC774\uC774\uB2E4."
   type: 1

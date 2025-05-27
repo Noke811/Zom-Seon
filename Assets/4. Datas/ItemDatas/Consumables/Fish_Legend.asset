@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Fish_Legend
   m_EditorClassIdentifier: 
+  id: 301
   itemName: "\uD669\uAE08\uBE5B \uC0DD\uC120"
   description: "\uC880\uCC98\uB7FC \uBCF4\uAE30 \uD798\uB4E0 \uC0DD\uC120\uC774\uB2E4!"
   type: 2

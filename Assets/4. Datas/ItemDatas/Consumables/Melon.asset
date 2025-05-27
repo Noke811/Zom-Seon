@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Melon
   m_EditorClassIdentifier: 
+  id: 303
   itemName: "\uBA5C\uB860"
   description: "\uD754\uD788 \uBCF4\uAE30 \uD798\uB4E0 \uBE44\uC2FC \uBA5C\uB860\uC774\uB2E4."
   type: 2

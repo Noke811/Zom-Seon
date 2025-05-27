@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 957498946695009219}
   - component: {fileID: 1923753645951236082}
   - component: {fileID: 6773928942920850291}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Item_Turnip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,6 +159,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 00ee7da38a367534eaffa10129971e85, type: 3}
       propertyPath: m_Name
       value: crop_turnip
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 00ee7da38a367534eaffa10129971e85, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

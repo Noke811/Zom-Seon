@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Potion_HP
   m_EditorClassIdentifier: 
+  id: 306
   itemName: "HP \uD3EC\uC158"
   description: "\uB9C8\uC2DC\uBA74 \uCCB4\uB825\uC744 \uD68C\uBCF5\uD55C\uB2E4."
   type: 2

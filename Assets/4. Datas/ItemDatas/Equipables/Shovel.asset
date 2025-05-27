@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Shovel
   m_EditorClassIdentifier: 
+  id: 206
   itemName: "\uC0BD"
   description: "\uD759\uC744 \uD314 \uC218 \uC788\uB294 \uC0BD\uC785\uB2C8\uB2E4."
   type: 1

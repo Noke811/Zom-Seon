@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Bucket
   m_EditorClassIdentifier: 
+  id: 201
   itemName: "\uC591\uB3D9\uC774"
   description: "\uBB3C\uC744 \uB730 \uC218 \uC788\uB294 \uC591\uB3D9\uC774\uC774\uB2E4."
   type: 1

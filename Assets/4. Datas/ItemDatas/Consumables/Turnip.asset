@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Turnip
   m_EditorClassIdentifier: 
+  id: 309
   itemName: "\uC21C\uBB34"
   description: "\uD754\uD788 \uBCFC \uC218 \uC788\uB294 \uC21C\uBB34\uC774\uB2E4."
   type: 2

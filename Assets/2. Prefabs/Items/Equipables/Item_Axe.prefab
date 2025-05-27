@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5208195626353136836}
   - component: {fileID: 8976126104190745008}
   - component: {fileID: 3027057961067923229}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Item_Axe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,6 +147,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0d9f368b0866ae941a329fdd950e4fde, type: 3}
       propertyPath: m_Name
       value: tool-axe
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0d9f368b0866ae941a329fdd950e4fde, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

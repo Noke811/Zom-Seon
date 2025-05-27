@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 207736517797486313}
   - component: {fileID: 4148806344807428253}
   - component: {fileID: 4208863189864773175}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Item_Potion(Stamina)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,6 +147,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e5f2eb1e0b3e49a429de812be8128d51, type: 3}
       propertyPath: m_Name
       value: bottle-large
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e5f2eb1e0b3e49a429de812be8128d51, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

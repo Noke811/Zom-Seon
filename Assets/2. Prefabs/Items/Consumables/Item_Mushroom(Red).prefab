@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8535602744624910487}
   - component: {fileID: 2456504934484032980}
   - component: {fileID: 6532302990863889950}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Item_Mushroom(Red)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,6 +159,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c0e62d94d83f390429518a8a68b2e5fd, type: 3}
       propertyPath: m_Name
       value: mushroom_red
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c0e62d94d83f390429518a8a68b2e5fd, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

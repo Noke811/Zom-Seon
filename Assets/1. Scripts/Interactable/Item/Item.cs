@@ -16,6 +16,6 @@ public class Item : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
-        // 인벤토리에 담기
+        
     }
 }

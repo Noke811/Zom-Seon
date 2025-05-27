@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
   m_Name: Plank
   m_EditorClassIdentifier: 
+  id: 100
   itemName: "\uD310\uC790"
   description: "\uB098\uBB47\uAC00\uC9C0\uB97C \uAC00\uACF5\uD55C \uAC83\uC774\uB2E4."
   type: 0
