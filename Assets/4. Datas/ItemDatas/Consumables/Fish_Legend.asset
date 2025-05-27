@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 102edf5244c67ad43ba15f1aca9d0abd, type: 3}
+  m_Name: Fish_Legend
+  m_EditorClassIdentifier: 
+  itemName: "\uD669\uAE08\uBE5B \uC0DD\uC120"
+  description: "\uC880\uCC98\uB7FC \uBCF4\uAE30 \uD798\uB4E0 \uC0DD\uC120\uC774\uB2E4!"
+  type: 2
+  icon: {fileID: 21300000, guid: 7928012fc7bf39649843520df4cf83ca, type: 3}
+  dropPrefab: {fileID: 2987484290620916804, guid: e60a5d2157b4e8c499f03cdf54837ee4, type: 3}
+  canStack: 1
+  maxAmount: 10
+  buffs:
+  - type: 0
+    value: 50
+    hasDuration: 0
+    duration: 0
+  - type: 2
+    value: 70
+    hasDuration: 0
+    duration: 0
+  - type: 4
+    value: 50
+    hasDuration: 0
+    duration: 0
