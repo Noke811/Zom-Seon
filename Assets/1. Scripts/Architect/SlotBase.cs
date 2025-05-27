@@ -58,6 +58,15 @@ public class SlotBase : MonoBehaviour
 
     public void OnSlotSelected(ItemData selectedItem)
     {
-        Debug.Log("Slot selected");
+        BuildingManager buildingManager = FindObjectOfType<BuildingManager>();
+        if (buildingManager != null)
+        {
+            Debug.Log("빌딩매니저 할당");
+            buildingManager.HandleItemSelected(selectedItem);
+        }
+        else
+        {
+            Debug.Log("빌딩매니저 없음.");
+        }
     }
 }

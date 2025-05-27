@@ -10,7 +10,7 @@ public class BuildingManager : MonoBehaviour
     public Material previewMaterialInvalid;
     
     private GameObject previewObject;
-    private Camera mainCamera;
+    public Camera mainCamera;
     private ItemData selectedItem;
 
     void Start()
@@ -75,7 +75,7 @@ public class BuildingManager : MonoBehaviour
 
     void UpdatePreviewObjectPosition()
     {
-        if (previewObject != null)
+        if (previewObject != null && selectedItem != null)
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, BuildableLayer))
@@ -161,7 +161,7 @@ public class BuildingManager : MonoBehaviour
 
     void SetPreviewMaterial(bool isValid)
     {
-        if (previewObject != null)
+        if (previewObject != null && selectedItem != null)
         {
             Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
             foreach (var renderer in renderers)
