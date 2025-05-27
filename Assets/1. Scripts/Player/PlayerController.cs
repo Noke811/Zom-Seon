@@ -134,4 +134,16 @@ public class PlayerController : MonoBehaviour
             _isGround = false;
         _animator.SetBool(_isJump, true);
     }
+
+    // 상호작용 키 (F)
+
+    // 인벤토리 키 (I)
+
+    // 제작 메뉴 (Tab)
+
+    // 퀵슬롯 (1 ~ 5)
+
+    // 공격 (좌클릭)
+
+    // 달리기 (쉬프트)
 }

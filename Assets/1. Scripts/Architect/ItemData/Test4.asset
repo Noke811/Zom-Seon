@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47a7ae04163363f49b39041cd53625b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 61df0ff578d01aa48b45daec92d374f2, type: 3}
   m_Name: Test4
   m_EditorClassIdentifier: 
-  itemName: "Test\uC7A5\uC2DD"
-  itemSprite: {fileID: 21300000, guid: 482687152a2fdc64e971114ba74bce25, type: 3}
-  itemPrefab: {fileID: 919132149155446097, guid: f6d03834ae8b9b04caf42fed74a93378, type: 3}
-  isPlaceable: 1
-  canBuildableTags:
-  - Buildable
+  itemName: 
+  itemSprite: {fileID: 0}
+  itemPrefab: {fileID: 0}
+  isPlaceable: 0
+  canBuildableTags: []
   isTool: 0

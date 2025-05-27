@@ -11,7 +11,7 @@ public class BuildingManager : MonoBehaviour
     
     private GameObject previewObject;
     public Camera mainCamera;
-    private ItemData selectedItem;
+    private ArchitectData selectedItem;
 
     void Start()
     {
@@ -31,7 +31,7 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    public void HandleItemSelected(ItemData item)
+    public void HandleItemSelected(ArchitectData item)
     {
         selectedItem = item;
 

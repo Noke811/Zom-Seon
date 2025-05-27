@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ItemData", menuName = "ItemData")]
-public class ItemData : ScriptableObject
+[CreateAssetMenu(fileName = "Architect", menuName = "new Architect")]
+public class ArchitectData : ScriptableObject
 {
     public string itemName;
     public Sprite itemSprite;

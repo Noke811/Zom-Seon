@@ -12,7 +12,7 @@ public enum BuffType
     Health,
     HealthRecovery,
     Hunger,
-    Water,
+    Thirst,
     Stamina,
     StaminaRecovery,
     Attack,

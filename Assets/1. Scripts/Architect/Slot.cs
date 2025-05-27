@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour
 {
-    public ItemData itemData;
+    public ArchitectData itemData;
     public Image slotImage;
     public TextMeshProUGUI slotText;
     public Button slotButton;

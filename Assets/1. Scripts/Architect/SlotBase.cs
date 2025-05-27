@@ -5,7 +5,7 @@ using UnityEngine;
 public class SlotBase : MonoBehaviour
 {
     public GameObject slotPrefab;
-    public List<ItemData> itemDatas;
+    public List<ArchitectData> itemDatas;
 
     private List<Slot> createdSlots = new List<Slot>();
 
@@ -56,7 +56,7 @@ public class SlotBase : MonoBehaviour
         }
     }
 
-    public void OnSlotSelected(ItemData selectedItem)
+    public void OnSlotSelected(ArchitectData selectedItem)
     {
         BuildingManager buildingManager = FindObjectOfType<BuildingManager>();
         if (buildingManager != null)
