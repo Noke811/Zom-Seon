@@ -17,15 +17,12 @@ public class UIManager : MonoBehaviour
 
     public bool IsUIActive { get; private set; }
 
-    private void Awake()
+    private void Start()
     {
         GameManager.Instance.Init(this);
         itemButton.Init();
         setQuickslotButton.Init();
-    }
 
-    private void Start()
-    {
         SetInteractableInfo(null);
         SetInventoryUI(false);
     }
