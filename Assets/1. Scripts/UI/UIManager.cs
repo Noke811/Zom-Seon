@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
 
     public bool IsUIActive { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         GameManager.Instance.Init(this);
         itemButton.Init();
