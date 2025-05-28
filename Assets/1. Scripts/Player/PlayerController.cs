@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,8 +10,6 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody _rigidbody;
     private Vector3 _direction;
-    // public LayerMask groundLayerMask;
-    // public float groundRayDistance;
     
     private bool _isGround;
     private int _isRun;
@@ -53,16 +52,6 @@ public class PlayerController : MonoBehaviour
         _direction.y = _rigidbody.velocity.y;
         
         _rigidbody.velocity = _direction;
-        
-        // Vector3 moveInput = new Vector3(_moveInput.x, 0, _moveInput.y);
-        // Vector3 worldMove = transform.TransformDirection(moveInput);
-        // if (worldMove.magnitude > 1)
-        //     worldMove.Normalize();
-        // Vector3 moveVelocity = worldMove * moveSpeed;
-        // rigidbody.velocity = new Vector3(moveVelocity.x, rigidbody.velocity.y, moveVelocity.z);
-
-        // float moveTime = moveSpeed * Time.deltaTime;
-        // rigidbody.MovePosition(transform.position + moveInput * moveTime);
     }
 
     private void Look()
@@ -99,28 +88,6 @@ public class PlayerController : MonoBehaviour
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    // bool IsGround Ray
-    // private bool IsGround()
-    // {
-    //     Ray[] rays = new Ray[4]
-    //     {
-    //         new Ray(transform.position + (transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f),
-    //         new Ray(transform.position + (-transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f),
-    //         new Ray(transform.position + (transform.right * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f),
-    //         new Ray(transform.position + (-transform.right * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f)
-    //     };
-    //
-    //     for (int i = 0; i < rays.Length; i++)
-    //     {
-    //         if (Physics.Raycast(rays[i], groundRayDistance, groundLayerMask))
-    //         {
-    //             return true;
-    //         }
-    //     }
-    //
-    //     return false;
-    // }
-
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground"))
@@ -142,6 +109,31 @@ public class PlayerController : MonoBehaviour
     // 제작 메뉴 (Tab)
 
     // 퀵슬롯 (1 ~ 5)
+    public void OnQuickSlot(InputAction.CallbackContext context)
+    {
+        int controlNum = int.Parse(context.control.name);
+        if (context.started)
+        {
+            switch (controlNum)
+            {
+                case 1:
+                    Debug.Log("1번 슬롯 선택");
+                    break;
+                case 2:
+                    Debug.Log("2번 슬롯 선택");
+                    break;
+                case 3:
+                    Debug.Log("3번 슬롯 선택");
+                    break;
+                case 4:
+                    Debug.Log("4번 슬롯 선택");
+                    break;
+                case 5:
+                    Debug.Log("5번 슬롯 선택");
+                    break;
+            }
+        }
+    }
 
     // 공격 (좌클릭)
 
