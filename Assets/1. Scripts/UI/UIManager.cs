@@ -10,16 +10,31 @@ public class UIManager : MonoBehaviour
 
     [Header("Inventory UI")]
     [SerializeField] GameObject inventoryUI;
+    [SerializeField] ItemButton itemButton;
+    public ItemButton ItemButton => itemButton;
+    [SerializeField] SetQuickslotButton setQuickslotButton;
+    public SetQuickslotButton SetQuickslotButton => setQuickslotButton;
+
+    public bool IsUIActive { get; private set; }
 
     private void Awake()
     {
         GameManager.Instance.Init(this);
+        itemButton.Init();
+        setQuickslotButton.Init();
     }
 
     private void Start()
     {
         SetInteractableInfo(null);
         SetInventoryUI(false);
+    }
+
+    private void Update()
+    {
+        // test : I 누르면 인벤토리 켜짐
+        if (Input.GetKeyDown(KeyCode.I))
+            SetInventoryUI();
     }
 
     // 상호작용 가능한 오브젝트 정보 표시 / 숨기기
@@ -38,8 +53,23 @@ public class UIManager : MonoBehaviour
     }
 
     // 인벤토리 UI 띄우기 / 숨기기
+    public void SetInventoryUI()
+    {
+        inventoryUI.SetActive(!inventoryUI.activeSelf);
+
+        ControlCursor(inventoryUI.activeSelf);
+    }
     public void SetInventoryUI(bool show)
     {
         inventoryUI.SetActive(show);
+
+        ControlCursor(show);
+    }
+
+    // UI가 켜지고 꺼짐에 따라 마우스 커서를 보이거나 안 보이게 설정
+    private void ControlCursor(bool show)
+    {
+        IsUIActive = show;
+        Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
     }
 }

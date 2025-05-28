@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         _isRun = Animator.StringToHash("isRun");
         _isJump = Animator.StringToHash("isJump");
         
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void FixedUpdate()
@@ -43,7 +43,8 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        Look();
+        if(!GameManager.Instance.UIManager.IsUIActive)
+            Look();
     }
 
     private void Move()

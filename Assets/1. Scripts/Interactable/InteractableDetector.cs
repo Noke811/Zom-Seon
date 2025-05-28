@@ -30,6 +30,10 @@ public class InteractableDetector : MonoBehaviour
                 UpdateInteractable(null);
             }
         }
+
+        // Test : F 누르면 상호작용 발동
+        if (Input.GetKeyDown(KeyCode.F))
+            Interaction();
     }
 
     // 상호작용 가능한 오브젝트 감지에 의한 업데이트

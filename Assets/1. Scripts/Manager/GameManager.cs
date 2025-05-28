@@ -2,44 +2,33 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
-    public static GameManager Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                instance = new GameObject("GameManager").AddComponent<GameManager>();
-            }
-            return instance;
-        }
-    }
+    public static GameManager Instance { get; private set; }
 
     public UIManager UIManager { get; private set; }
     public Transform Player { get; private set; }
+    [SerializeField] Inventory inventory;
+    public Inventory Inventory => inventory;
 
     [Header("Time Control")]
     public bool IsNight = false;
 
     private void Awake()
     {
-        if(instance == null)
+        if(Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if(Instance != this)
         {
-            if(instance != this)
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 
     private void Start()
     {
         Player = GameObject.FindWithTag("Player")?.transform;
+        inventory.Init();
     }
 
     private void Update()
