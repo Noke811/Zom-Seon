@@ -7,6 +7,8 @@ public class Inventory : MonoBehaviour
     [SerializeField] int inventoryCount;
     [SerializeField] Transform dropPosition;
 
+    public bool IsSwapMode { get; private set; }
+
     // 인벤토리 초기화
     public void Init()
     {
@@ -19,7 +21,7 @@ public class Inventory : MonoBehaviour
     }
 
     // 인벤토리에 아이템 추가
-    public void AddInventory(ItemData item, int amount)
+    public bool AddInventory(ItemData item, int amount)
     {
         int remain = amount;
 
@@ -30,7 +32,7 @@ public class Inventory : MonoBehaviour
                 if (slots[i].CanSave(item.Id))
                 {
                     remain = slots[i].AddAmount(remain);
-                    if(remain == 0) return;
+                    if(remain == 0) return true;
                 }
             }
         }
@@ -42,16 +44,16 @@ public class Inventory : MonoBehaviour
                 if (item.CanStack)
                 {
                     remain = slots[i].SetSlot(item, remain);
-                    if (remain == 0) return;
+                    if (remain == 0) return true;
                 }
 
                 slots[i].SetSlot(item);
-                return;
+                return true;
             }
         }
 
-        // 인벤토리가 가득 차면 아이템을 선택해서 버림
-        Debug.Log("인벤토리가 꽉 참!");
+        // 인벤토리가 가득 차면 아이템을 인벤토리에 넣을 수 없음
+        return false;
     }
 
     // 해당 슬롯 아이템 버리기
@@ -59,5 +61,11 @@ public class Inventory : MonoBehaviour
     {
         Instantiate(slots[index].GetDropItem(), dropPosition.position + dropPosition.forward, Quaternion.identity);
         slots[index].DecreaseAmount(1);
+    }
+
+    // 
+    public void SwapItem(int index)
+    {
+
     }
 }
