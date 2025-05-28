@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
-    public float gridsize = 1f;
-    public LayerMask BuildableLayer;
+    public float gridSize = 1f;
+    public LayerMask buildableLayer;
     public Material previewMaterial;
     public Material previewMaterialInvalid;
+    //public AudioClip placeSound;
+    //public GameObject placeEffect;
     
     private GameObject previewObject;
     public Camera mainCamera;
     private ArchitectData selectedItem;
+    private Vector3Int currentGridPosition;
 
     void Start()
     {
@@ -20,24 +24,113 @@ public class BuildingManager : MonoBehaviour
 
     void Update()
     {
-        if (selectedItem != null && selectedItem.isPlaceable)
-        {
-            UpdatePreviewObjectPosition();
+        HandleInput();
+        UpdatePreview();
+    }
 
+    void HandleInput()
+    {
+        if (selectedItem == null)
+            return;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CancelPlacement();
+        }
+        else if (selectedItem.isPlaceable)
+        {
             if (Input.GetMouseButtonDown(0))
             {
                 TryPlaceObject();
             }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                RotatePreviewObject();
+            }
         }
+        else if (selectedItem.isTool)
+        {
+            TryCraftTool();
+        }
+    }
+    void UpdatePreview()
+    {
+        if (selectedItem == null || !selectedItem.isPlaceable || previewObject == null) return;
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, buildableLayer))
+        {
+            currentGridPosition = GetGridPosition(hit.point);
+            previewObject.transform.position = currentGridPosition;
+            bool canBuild = CanPlaceObject(currentGridPosition);
+            SetPreviewMaterial(canBuild);
+        }
+        else
+        {
+            previewObject.transform.position = ray.GetPoint(100f);
+            SetPreviewMaterial(false);
+        }
+    }
+    Vector3Int GetGridPosition(Vector3 worldPosition)
+    {
+        return new Vector3Int(
+            Mathf.RoundToInt(worldPosition.x / gridSize) * (int)gridSize,
+            Mathf.RoundToInt(worldPosition.y / gridSize) * (int)gridSize,
+            Mathf.RoundToInt(worldPosition.z / gridSize) * (int)gridSize
+        );
+    }
+    bool CanPlaceObject(Vector3Int position)
+    {
+        Collider[] colliders = Physics.OverlapBox(position, previewObject.GetComponent<Collider>().bounds.size / 2f, previewObject.transform.rotation, buildableLayer);
+        if (colliders.Length > 0) return false;
+        
+        if (selectedItem.isFoundation)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(position + Vector3.up * 0.5f, Vector3.down, out hit, 1f, buildableLayer))
+            {
+                if (!hit.collider.CompareTag("Ground")) return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (selectedItem.canBuildableTags.Count > 0)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(position + Vector3.up * 0.5f, Vector3.down, out hit, 1f, buildableLayer))
+            {
+                if (!selectedItem.canBuildableTags.Contains(hit.collider.tag) && !hit.collider.CompareTag("Foundation")) return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    void TryPlaceObject()
+    {
+        if (selectedItem == null || !selectedItem.isPlaceable || !CanPlaceObject(currentGridPosition)) return;
+
+        GameObject placedObject = Instantiate(selectedItem.itemPrefab, currentGridPosition, previewObject.transform.rotation);
+        
+        CancelPlacement();
+    }
+
+    void CancelPlacement()
+    {
+        Destroy(previewObject);
+        previewObject = null;
+        selectedItem = null;
     }
 
     public void HandleItemSelected(ArchitectData item)
     {
         selectedItem = item;
-
         if (selectedItem.isPlaceable)
         {
-            ShowPreviewObject();
+            ShowPreview();
         }
         else if (selectedItem.isTool)
         {
@@ -45,90 +138,24 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("선택한 아이템은 설치나 제작이 불가능합니다.");
+            Debug.Log("선택한 아이템은 설치하거나 제작할 수 없습니다.");
             selectedItem = null;
         }
     }
-
-    void ShowPreviewObject()
+    void ShowPreview()
     {
-        DestroyPreviewObject();
-        if (selectedItem != null && selectedItem.itemPrefab != null && selectedItem.isPlaceable)
-        {
-            previewObject = Instantiate(selectedItem.itemPrefab, Vector3.zero, Quaternion.identity);
-            SetPreviewMaterial(true);
-        }
-        else
-        {
-            Debug.Log("설치 불가");
-        }
+        Destroy(previewObject);
+        previewObject = Instantiate(selectedItem.itemPrefab, Vector3.zero, Quaternion.identity);
+        SetPreviewMaterial(true);
     }
 
-    void DestroyPreviewObject()
+    void SetPreviewMaterial(bool isValid)
     {
-        if (previewObject != null)
+        Material mat = isValid ? previewMaterial : previewMaterialInvalid;
+        Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
+        foreach (var renderer in renderers)
         {
-            Destroy(previewObject);
-            previewObject = null;
-        }
-    }
-
-    void UpdatePreviewObjectPosition()
-    {
-        if (previewObject != null && selectedItem != null)
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, BuildableLayer))
-            {
-                Vector3Int gridPosition = GetGridPosition(hit.point);
-                previewObject.transform.position = gridPosition;
-
-                bool canBuild = true;
-                
-                if (selectedItem.canBuildableTags.Count > 0 && !selectedItem.canBuildableTags.Contains(hit.collider.tag))
-                    canBuild = false;
-                SetPreviewMaterial(canBuild);
-            }
-            else
-            {
-                previewObject.transform.position = ray.GetPoint(100f);
-                SetPreviewMaterial(false);
-            }
-        }
-    }
-
-    Vector3Int GetGridPosition(Vector3 worldPosition)
-    {
-        return new Vector3Int(
-            Mathf.RoundToInt(worldPosition.x / gridsize) * (int)gridsize,
-            Mathf.RoundToInt(worldPosition.y / gridsize) * (int)gridsize,
-            Mathf.RoundToInt(worldPosition.z / gridsize) * (int)gridsize
-        );
-    }
-
-    void TryPlaceObject()
-    {
-        if (previewObject != null)
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, BuildableLayer))
-            {
-                bool canBuild = true;
-                
-                if (selectedItem.canBuildableTags.Count > 0 && !selectedItem.canBuildableTags.Contains(hit.collider.tag))
-                    canBuild = false;
-                if (canBuild)
-                {
-                    Instantiate(previewObject, hit.point, Quaternion.identity);
-                    DestroyPreviewObject();
-                }
-                else
-                {
-                    {
-                        Debug.Log("설치 불가");
-                    }
-                }
-            }
+            renderer.material = mat;
         }
     }
 
@@ -136,17 +163,26 @@ public class BuildingManager : MonoBehaviour
     {
         if (selectedItem != null && selectedItem.isTool)
         {
-            // 인벤토리 추가 필요
-            Debug.Log(selectedItem.itemName + "제작성공");
+            if (HasMaterials())
+            {
+                ConsumeMaterials();
+                Debug.Log(selectedItem.itemName + " 제작 성공!");
+            }
+            else
+            {
+                Debug.Log("재료가 부족합니다.");
+            }
             selectedItem = null;
-        }
-        else
-        {
-            //재료 부족 시
-            Debug.Log("제작 실패");
         }
     }
 
+    void RotatePreviewObject()
+    {
+        if (previewObject != null)
+        {
+            previewObject.transform.Rotate(Vector3.up, 90f);
+        }
+    }
     bool HasMaterials()
     {
         //인벤토리 연동
@@ -157,24 +193,5 @@ public class BuildingManager : MonoBehaviour
     {
         //인벤토리 연동
         Debug.Log("재료 소모");
-    }
-
-    void SetPreviewMaterial(bool isValid)
-    {
-        if (previewObject != null && selectedItem != null)
-        {
-            Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
-            foreach (var renderer in renderers)
-            {
-                if (isValid)
-                {
-                    renderer.material = previewMaterial;
-                }
-                else
-                {
-                    renderer.material = previewMaterialInvalid;
-                }
-            }
-        }
     }
 }

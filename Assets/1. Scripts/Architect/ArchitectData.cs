@@ -12,4 +12,6 @@ public class ArchitectData : ScriptableObject
     public bool isPlaceable;
     public List<string> canBuildableTags;
     public bool isTool;
+    public Material originalMaterial;
+    public bool isFoundation;
 }
