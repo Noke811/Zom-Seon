@@ -82,11 +82,12 @@ public class Inventory : MonoBehaviour
         GameManager.Instance.UIManager.ItemButton.HideButtons();
     }
 
-    // 슬롯 버튼을 눌렀을 때 해당하는 버튼이 보여짐
+    // 슬롯 버튼을 눌렀을 때 인덱스 변경
     public void ChangeSelectedSlot(int index)
     {
         if(selectedIndex == index) return;
 
+        // 스왑 모드가 켜져있을 때는 서로의 데이터와 수량 바꾸기
         if (IsSwapMode)
         {
             ItemData tempData = slots[selectedIndex].Data;
