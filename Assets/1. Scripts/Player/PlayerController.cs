@@ -1,15 +1,16 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Moving")]
-    public float moveSpeed;
     public float jumpForce;
+    public float _baseMoveSpeed;
     private Vector2 _moveInput;
     private Rigidbody _rigidbody;
     private Vector3 _direction;
+    private float _dashSpeed;
+    public float curMoveSpeed;
     
     private bool _isGround;
     private int _isRun;
@@ -33,6 +34,8 @@ public class PlayerController : MonoBehaviour
         _isJump = Animator.StringToHash("isJump");
         
         Cursor.lockState = CursorLockMode.Locked;
+
+        curMoveSpeed = _baseMoveSpeed;
     }
 
     private void FixedUpdate()
@@ -48,7 +51,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         _direction = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-        _direction *= moveSpeed;
+        _direction *= curMoveSpeed;
         _direction.y = _rigidbody.velocity.y;
         
         _rigidbody.velocity = _direction;
@@ -113,7 +116,6 @@ public class PlayerController : MonoBehaviour
     {
         int controlNum = int.Parse(context.control.name);
         if (context.started)
-        {
             switch (controlNum)
             {
                 case 1:
@@ -132,10 +134,25 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("5번 슬롯 선택");
                     break;
             }
-        }
     }
 
     // 공격 (좌클릭)
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("공격!");
+            // 공격 애니메이션 실행
+            // _animator.SetTrigger("Attack");
+        }
+    }
 
     // 달리기 (쉬프트)
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            curMoveSpeed = _dashSpeed = _baseMoveSpeed * 1.4f;
+        else if (context.canceled)
+            curMoveSpeed = _baseMoveSpeed;
+    }   
 }

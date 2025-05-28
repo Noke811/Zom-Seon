@@ -553,7 +553,19 @@ MonoBehaviour:
     m_ActionId: 9496d975-985e-4c5a-9cb7-0929106fe3d8
     m_ActionName: Player/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5866666019969895339}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 22f1d360-a592-4824-ace4-07c89983f0fa
     m_ActionName: Player/Dash[/Keyboard/shift]
   m_NeverAutoSwitchControlSchemes: 0
@@ -1859,8 +1871,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b230a181ee316bd49acf7479e456e7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
   jumpForce: 300
+  _baseMoveSpeed: 5
   cameraContainer: {fileID: 930793214}
   sensitive: 0.1
 --- !u!114 &5866666019969895340
