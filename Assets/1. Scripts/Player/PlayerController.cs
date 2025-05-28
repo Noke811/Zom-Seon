@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Looking")]
     public Transform cameraContainer;
+    InteractableDetector interactableDetector;
     public float sensitive;
     private Vector2 _mouseDelta;
     private float _camCurXRot;
@@ -29,11 +30,10 @@ public class PlayerController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
         cameraContainer = transform.Find("Camera Container");
+        interactableDetector = cameraContainer.GetComponent<InteractableDetector>();
 
         _isRun = Animator.StringToHash("isRun");
         _isJump = Animator.StringToHash("isJump");
-        
-        Cursor.lockState = CursorLockMode.Locked;
 
         curMoveSpeed = _baseMoveSpeed;
     }
@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        Look();
+        if(!GameManager.Instance.UIManager.IsUIActive)
+            Look();
     }
 
     private void Move()
@@ -111,6 +112,7 @@ public class PlayerController : MonoBehaviour
         if (context.started)
         {
             Debug.Log("상호작용");
+            interactableDetector.Interaction();
         }
     }
 

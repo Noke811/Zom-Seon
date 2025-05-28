@@ -2,44 +2,35 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
-    public static GameManager Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                instance = new GameObject("GameManager").AddComponent<GameManager>();
-            }
-            return instance;
-        }
-    }
+    public static GameManager Instance { get; private set; }
 
-    public UIManager UIManager { get; private set; }
     public Transform Player { get; private set; }
+    [SerializeField] Inventory inventory;
+    public Inventory Inventory => inventory;
+    [SerializeField] UIManager uiManager;
+    public UIManager UIManager => uiManager;
 
     [Header("Time Control")]
     public bool IsNight = false;
 
     private void Awake()
     {
-        if(instance == null)
+        if(Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if(Instance != this)
         {
-            if(instance != this)
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 
     private void Start()
     {
         Player = GameObject.FindWithTag("Player")?.transform;
+        uiManager.Init();
+        inventory.Init();
     }
 
     private void Update()
@@ -51,11 +42,4 @@ public class GameManager : MonoBehaviour
             Debug.Log(IsNight ? "밤이 되었습니다" : "낮이 되었습니다");
         }
     }
-
-    #region Initialization
-    public void Init(UIManager uiManager)
-    {
-        UIManager = uiManager;
-    }
-    #endregion
 }
