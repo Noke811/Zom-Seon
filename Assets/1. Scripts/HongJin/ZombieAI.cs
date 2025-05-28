@@ -50,13 +50,14 @@ public class ZombieAI : MonoBehaviour
         // 좀비 이동 및 애니메이션 제어용 컴포넌트 참조
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-    
+        
         // 이동 성능 설정 (즉각 반응하도록 튜닝)
         agent.acceleration = 30f;        // 빠르게 출발
         agent.angularSpeed = 360f;       // 빠르게 회전
         agent.stoppingDistance = 0.1f;   // 목적지에 가까워지면 정확히 멈춤
         agent.autoBraking = true;        // 멈출 때 천천히 제동하지 않고 즉시 정지
-
+        agent.stoppingDistance = 0.8f;   // 접근거리
+        
         // 시작 상태를 '배회'로 설정
         state = ZombieState.Wandering;
 
@@ -150,29 +151,34 @@ public class ZombieAI : MonoBehaviour
     // 플레이어 추적 중일 때 실행되는 로직
     void ChaseUpdate()
     {
-        // 플레이어가 없으면 아무것도 하지 않음
         if (player == null) return;
 
-        // 플레이어와의 현재 거리 계산
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // 낮일 때, 플레이어가 추적 유지 거리보다 멀어지면 배회 상태로 전환
+        // 낮이면 일정 거리 넘어서면 추적 멈춤
         if (!isNight && distance > chaseKeepRange)
         {
             SetWandering();
             return;
         }
 
-        // NavMeshAgent를 활성화하고, 플레이어 위치를 목적지로 설정
+        // 가까우면 멈추고 바라보기만
+        if (distance <= agent.stoppingDistance)
+        {
+            agent.isStopped = true;
+
+            // 플레이어 바라보게 회전
+            Vector3 dir = player.position - transform.position;
+            dir.y = 0;
+            if (dir != Vector3.zero)
+                transform.forward = dir.normalized;
+
+            return;
+        }
+
+        // 그 외에는 계속 추적
         agent.isStopped = false;
         agent.SetDestination(player.position);
-
-        // 플레이어가 공격 사거리 안에 들어온 경우
-        if (distance <= attackRange)
-        {
-            Debug.Log("좀비가 플레이어 공격!");
-            // TODO: 공격 애니메이션, 데미지 처리 등 추가 예정
-        }
     }
     
     // Fence를 공격하는 상태에서 실행되는 로직
@@ -298,4 +304,6 @@ public class ZombieAI : MonoBehaviour
         // 10번 시도 후에도 실패하면 원래 위치 반환
         return origin;
     }
+    
+    
 }
