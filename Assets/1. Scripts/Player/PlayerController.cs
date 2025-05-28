@@ -111,7 +111,6 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            Debug.Log("상호작용");
             interactableDetector.Interaction();
         }
     }
@@ -121,8 +120,6 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            Debug.Log("인벤토리");
-            // 인벤토리 UI 열기
             GameManager.Instance.UIManager.SetInventoryUI();
         }
     }

@@ -4,14 +4,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public Transform Player { get; private set; }
-    [SerializeField] Inventory inventory;
-    public Inventory Inventory => inventory;
+    [SerializeField] Player player;
+    public Player Player => player;
     [SerializeField] UIManager uiManager;
     public UIManager UIManager => uiManager;
-
-    [Header("Time Control")]
-    public bool IsNight = false;
+    [SerializeField] Inventory inventory;
+    public Inventory Inventory => inventory;
+    public DayAndNight DayCycle { get; private set; }
 
     private void Awake()
     {
@@ -24,22 +23,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
-    private void Start()
-    {
-        Player = GameObject.FindWithTag("Player")?.transform;
         uiManager.Init();
         inventory.Init();
-    }
 
-    private void Update()
-    {
-        // 테스트용: N 키를 눌러 밤/낮 전환
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            IsNight = !IsNight;
-            Debug.Log(IsNight ? "밤이 되었습니다" : "낮이 되었습니다");
-        }
+        DayCycle = GetComponentInChildren<DayAndNight>();
     }
 }

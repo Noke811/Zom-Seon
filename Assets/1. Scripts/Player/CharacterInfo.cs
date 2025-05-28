@@ -36,9 +36,4 @@ public class CharacterInfo : MonoBehaviour
     {
 
     }
-
-    private void Start()
-    {
-        CharacterManager.Instance.Player.info = this;
-    }
 }

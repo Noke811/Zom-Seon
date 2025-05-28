@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public PlayerController controller;
-    public CharacterInfo info;
+    public PlayerController Controller { get; private set; }
+    public CharacterInfo Info { get; private set; }
 
     private void Awake()
     {
-        CharacterManager.Instance.Player = this;
-        controller = GetComponent<PlayerController>();
-        info = GetComponent<CharacterInfo>();
+        Controller = GetComponent<PlayerController>();
+        Info = GetComponent<CharacterInfo>();
     }
 }
