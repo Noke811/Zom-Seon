@@ -17,21 +17,14 @@ public class UIManager : MonoBehaviour
 
     public bool IsUIActive { get; private set; }
 
-    private void Awake()
+    // UI 매니저 초기화
+    public void Init()
     {
-        GameManager.Instance.Init(this);
         itemButton.Init();
         setQuickslotButton.Init();
 
         SetInteractableInfo(null);
         inventoryUI.SetActive(false);
-    }
-
-    private void Update()
-    {
-        // test : I 누르면 인벤토리 켜짐
-        if (Input.GetKeyDown(KeyCode.I))
-            SetInventoryUI();
     }
 
     // 상호작용 가능한 오브젝트 정보 표시 / 숨기기
