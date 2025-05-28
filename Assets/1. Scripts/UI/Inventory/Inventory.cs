@@ -1,16 +1,24 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+    [Header("Inventory Info")]
     [SerializeField] GameObject inventorySlot;
     InventorySlot[] slots;
     [SerializeField] int inventoryCount;
+    int selectedIndex;
+    public ItemType selectedItemType => slots[selectedIndex].Data.Type;
+    public bool IsSwapMode { get; private set; } // 인벤토리에서 아이템 이동 시에 사용
+
+    [Header("Drop")]
     [SerializeField] Transform dropPosition;
 
-    int selectedIndex;
-
-    public bool IsSwapMode { get; private set; }
+    [Header("Quickslot")]
+    [SerializeField] Transform quickslotUI;
+    List<Image> quickslotImages = new List<Image>();
+    int[] quickslot = new int[5];
 
     // 인벤토리 초기화
     public void Init()
@@ -23,6 +31,20 @@ public class Inventory : MonoBehaviour
         }
 
         IsSwapMode = false;
+
+        for (int i = 0; i < quickslotUI.childCount; i++)
+        {
+            Image icon = quickslotUI.GetChild(i).GetComponentsInChildren<Image>()[1];
+            icon.sprite = null;
+            icon.enabled = false;
+
+            quickslotImages.Add(icon);
+        }
+
+        for (int i = 0; i < quickslot.Length; i++)
+        {
+            quickslot[i] = -1;
+        }
     }
 
     // 인벤토리 UI가 다시 활성화되었을 때의 초기화
@@ -92,6 +114,7 @@ public class Inventory : MonoBehaviour
         {
             ItemData tempData = slots[selectedIndex].Data;
             int tempAmount = slots[selectedIndex].Amount;
+            int tempQuickIndex = slots[selectedIndex].QuickIndex;
 
             if (slots[index].IsEmpty)
             {
@@ -99,9 +122,9 @@ public class Inventory : MonoBehaviour
             }
             else
             {
-                slots[selectedIndex].SetSlot(slots[index].Data, slots[index].Amount);
+                slots[selectedIndex].SetSlot(slots[index].Data, slots[index].Amount, slots[index].QuickIndex);
             }
-            slots[index].SetSlot(tempData, tempAmount);
+            slots[index].SetSlot(tempData, tempAmount, tempQuickIndex);
 
             IsSwapMode = false;
         }
@@ -114,7 +137,49 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(slots[selectedIndex].Data.Type);
+            GameManager.Instance.UIManager.ItemButton.DisplayItemButtons();
+        }
+    }
+
+    // 퀵슬롯 저장
+    public void SaveQuickslot(int quickNumber)
+    {
+        if (quickslot[quickNumber] == selectedIndex) return;
+
+        // 다른 퀵슬롯에 저장되어 있었다면 해제
+        ReleaseQuickslot();
+
+        // 해당 퀵슬롯에 저장된 슬롯의 퀵슬롯 숫자 표기 지우기
+        if(quickslot[quickNumber] != -1)
+        {
+            slots[quickslot[quickNumber]].SetQuickslotNum(-1);
+        }
+
+        // 퀵슬롯에 아이템 덮어씌우기
+        quickslot[quickNumber] = selectedIndex;
+
+        quickslotImages[quickNumber].sprite = slots[selectedIndex].Data.Icon;
+        quickslotImages[quickNumber].SetNativeSize();
+        quickslotImages[quickNumber].enabled = true;
+
+        slots[selectedIndex].SetQuickslotNum(quickNumber + 1);
+    }
+
+    // 퀵슬롯 해제
+    public void ReleaseQuickslot()
+    {
+        for (int i = 0; i < quickslot.Length; i++)
+        {
+            if (quickslot[i] == selectedIndex)
+            {
+                quickslot[i] = -1;
+
+                quickslotImages[i].sprite = null;
+                quickslotImages[i].enabled = false;
+
+                slots[selectedIndex].SetQuickslotNum(-1);
+                break;
+            }
         }
     }
 }

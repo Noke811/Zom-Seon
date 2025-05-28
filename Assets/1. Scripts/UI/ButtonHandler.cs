@@ -6,7 +6,7 @@ public abstract class ButtonHandler : MonoBehaviour
     protected Button[] buttons;
     
     // 버튼 초기화
-    public void Init()
+    public virtual void Init()
     {
         buttons = GetComponentsInChildren<Button>(true);
         for (int i = 0; i < buttons.Length; i++)
@@ -23,6 +23,15 @@ public abstract class ButtonHandler : MonoBehaviour
         foreach (Button button in buttons)
         {
             button.gameObject.SetActive(false);
+        }
+    }
+
+    // 모든 버튼 띄우기
+    public void ShowButtons()
+    {
+        foreach (Button button in buttons)
+        {
+            button.gameObject.SetActive(true);
         }
     }
 

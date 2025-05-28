@@ -14,6 +14,8 @@ public class InventorySlot : MonoBehaviour
     bool isFull => Amount >= Data.MaxAmount;
 
     int index;
+    int quickIndex;
+    public int QuickIndex => quickIndex;
 
     // 인덱스 번호 부여 및 슬롯 초기화
     public void Init(int _index)
@@ -34,19 +36,20 @@ public class InventorySlot : MonoBehaviour
     {
         Data = data;
         Amount = 1;
+        quickIndex = -1;
 
         icon.sprite = Data.Icon;
         icon.SetNativeSize();
         icon.enabled = true;
 
         UpdateAmountText();
+        UpdateQuickNumText();
     }
-
-    // 아이템 설정 : 최대 수량을 벗어날 경우 최대까지 채우고 남은 수량을 반환
-    public int SetSlot(ItemData data, int _amount)
+    public int SetSlot(ItemData data, int _amount, int _quickIndex = -1)
     {
         Data = data;
 
+        // 최대 수량을 벗어날 경우 최대까지 채우고 남은 수량을 반환
         int remain = 0;
         if(_amount > Data.MaxAmount)
         {
@@ -58,11 +61,14 @@ public class InventorySlot : MonoBehaviour
             Amount = _amount;
         }
 
+        quickIndex = _quickIndex;
+
         icon.sprite = Data.Icon;
         icon.SetNativeSize();
         icon.enabled = true;
 
         UpdateAmountText();
+        UpdateQuickNumText();
 
         return remain;
     }
@@ -72,12 +78,13 @@ public class InventorySlot : MonoBehaviour
     {
         Data = null;
         Amount = 0;
+        quickIndex = -1;
 
         icon.sprite = null;
         icon.enabled = false;
 
         UpdateAmountText();
-        quickTxt.gameObject.SetActive(false);
+        UpdateQuickNumText();
 
         GameManager.Instance.UIManager.ItemButton.HideButtons();
     }
@@ -86,6 +93,27 @@ public class InventorySlot : MonoBehaviour
     public bool CanSave(int id)
     {
         return !IsEmpty && (Data.Id == id) && !isFull;
+    }
+
+    // 퀵슬롯 등록 시 숫자 설정
+    public void SetQuickslotNum(int index)
+    {
+        quickIndex = index;
+
+        UpdateQuickNumText();
+    }
+
+    // 퀵슬롯 숫자 텍스트 업데이트
+    private void UpdateQuickNumText()
+    {
+        if(quickIndex == -1)
+        {
+            quickTxt.gameObject.SetActive(false);
+            return;
+        }
+
+        quickTxt.text = quickIndex.ToString();
+        quickTxt.gameObject.SetActive(true);
     }
 
     #region Amount

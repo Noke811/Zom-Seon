@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class ItemButton : ButtonHandler
 {
     private enum ItemButtonType
@@ -13,8 +11,9 @@ public class ItemButton : ButtonHandler
     }
 
     // 아이템 타입에 따른 버튼 표시
-    public void DisplayItemButtons(ItemType type)
+    public void DisplayItemButtons()
     {
+        ItemType type = GameManager.Instance.Inventory.selectedItemType;
         bool isEquipable = type == ItemType.Equipable;
         bool isConsumable = type == ItemType.Consumalbe;
         bool canSetQuickslot = isEquipable || isConsumable;
@@ -25,6 +24,8 @@ public class ItemButton : ButtonHandler
         buttons[(int)ItemButtonType.Quick].gameObject.SetActive(canSetQuickslot);
         buttons[(int)ItemButtonType.Move].gameObject.SetActive(true);
         buttons[(int)ItemButtonType.Drop].gameObject.SetActive(true);
+
+        GameManager.Instance.UIManager.SetQuickslotButton.HideButtons();
     }
 
     // 해당 버튼 클릭했을 때 실행
@@ -45,7 +46,8 @@ public class ItemButton : ButtonHandler
                 break;
 
             case ItemButtonType.Quick:
-                // 퀵슬롯 등록 버튼 활성화
+                HideButtons();
+                GameManager.Instance.UIManager.SetQuickslotButton.ShowButtons();
                 break;
 
             case ItemButtonType.Move:
