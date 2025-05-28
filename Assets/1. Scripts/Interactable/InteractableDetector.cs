@@ -12,7 +12,9 @@ public class InteractableDetector : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        if(Physics.Raycast(ray, out hit, distance, interactableLayer))
+        Debug.DrawRay(transform.position, transform.forward * distance, Color.red);
+
+        if (Physics.Raycast(ray, out hit, distance, interactableLayer))
         {
             // 상호작용 가능한 오브젝트가 감지되었을 때
             IInteractable hitInteractable = hit.collider.GetComponent<IInteractable>();
