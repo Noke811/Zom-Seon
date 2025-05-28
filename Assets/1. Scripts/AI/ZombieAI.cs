@@ -41,7 +41,7 @@ public class ZombieAI : MonoBehaviour
 
     // 밤/낮 상태 기록
     private bool wasNight = false;           // 이전 프레임이 밤이었는지 여부
-    private bool isNight => GameManager.Instance.IsNight; // 현재 밤 여부 (GameManager 통해 확인)
+    private bool isNight => GameManager.Instance.DayCycle.IsNight; // 현재 밤 여부 (GameManager 통해 확인)
     
     
     //컴포넌트 설정, 이동 속성 설정, 상태 초기화, 플레이어 찾기

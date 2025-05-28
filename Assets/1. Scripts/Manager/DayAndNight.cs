@@ -11,6 +11,8 @@ public class DayAndNight : MonoBehaviour
     private float timeRate;
     public Vector3 noon;
 
+    public bool IsNight { get; private set; }
+
     [Header("Sun")]
     public Light sun;
     public Gradient sunColor;
@@ -29,17 +31,20 @@ public class DayAndNight : MonoBehaviour
     {
         timeRate = 1.0f / fullDayLength;
         time = startTime;
+        IsNight = false;
     }
     private void Update()
     {
         time = (time + timeRate * Time.deltaTime) % 1.0f;
 
-        UpdateLighting(sun, sunColor, sunIntensity);
+        if (time >= 0.5f && !IsNight) IsNight = true;
+        else if(time < 0.5f && IsNight) IsNight = false;
+
+            UpdateLighting(sun, sunColor, sunIntensity);
         UpdateLighting(moon, moonColor, moonIntensity);
 
         RenderSettings.ambientIntensity = lightingIntensityMultiplier.Evaluate(time);
         RenderSettings.reflectionIntensity = reflectionIntensityMultiplier.Evaluate(time);
-
     }
 
     void UpdateLighting(Light lightSource, Gradient colorGradiant, AnimationCurve intensityCurve)
