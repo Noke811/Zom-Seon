@@ -30,9 +30,9 @@ public class NPC_Interact : MonoBehaviour, IInteractable
     }
     
     // 플레이어 컨트롤
-    /*[Header("Dialogue UI")]
-    [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private Text dialogueText;
+    /*[Header("대화")]
+    private GameObject dialoguePanel;
+    private Text dialogueText;
     
     private InteractableDetector detector;
     
