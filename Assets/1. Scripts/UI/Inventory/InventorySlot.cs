@@ -8,14 +8,14 @@ public class InventorySlot : MonoBehaviour
     Text quickTxt;
     Button button;
 
-    ItemData data;
-    public bool IsEmpty => data == null;
-    int amount;
-    bool isFull => amount >= data.MaxAmount;
+    public ItemData Data { get; private set; }
+    public bool IsEmpty => Data == null;
+    public int Amount { get; private set; }
+    bool isFull => Amount >= Data.MaxAmount;
 
     int index;
 
-    // 인덱스 번호 부여
+    // 인덱스 번호 부여 및 슬롯 초기화
     public void Init(int _index)
     {
         index = _index;
@@ -24,18 +24,18 @@ public class InventorySlot : MonoBehaviour
         amountTxt = GetComponentsInChildren<Text>(true)[0];
         quickTxt = GetComponentsInChildren<Text>(true)[1];
         button = GetComponent<Button>();
-        button.onClick.AddListener(OnSlotButtonClick);
+        button.onClick.AddListener(() => GameManager.Instance.Inventory.ChangeSelectedSlot(index));
 
         ClearSlot();
     }
 
     // 아이템 설정
-    public void SetSlot(ItemData _data)
+    public void SetSlot(ItemData data)
     {
-        data = _data;
-        amount = 1;
+        Data = data;
+        Amount = 1;
 
-        icon.sprite = data.Icon;
+        icon.sprite = Data.Icon;
         icon.SetNativeSize();
         icon.enabled = true;
 
@@ -43,22 +43,22 @@ public class InventorySlot : MonoBehaviour
     }
 
     // 아이템 설정 : 최대 수량을 벗어날 경우 최대까지 채우고 남은 수량을 반환
-    public int SetSlot(ItemData _data, int _amount)
+    public int SetSlot(ItemData data, int _amount)
     {
-        data = _data;
+        Data = data;
 
         int remain = 0;
-        if(_amount > data.MaxAmount)
+        if(_amount > Data.MaxAmount)
         {
-            amount = data.MaxAmount;
-            remain = _amount - data.MaxAmount;
+            Amount = Data.MaxAmount;
+            remain = _amount - Data.MaxAmount;
         }
         else
         {
-            amount = _amount;
+            Amount = _amount;
         }
 
-        icon.sprite = data.Icon;
+        icon.sprite = Data.Icon;
         icon.SetNativeSize();
         icon.enabled = true;
 
@@ -70,8 +70,8 @@ public class InventorySlot : MonoBehaviour
     // 슬롯 초기화
     public void ClearSlot()
     {
-        data = null;
-        amount = 0;
+        Data = null;
+        Amount = 0;
 
         icon.sprite = null;
         icon.enabled = false;
@@ -85,7 +85,7 @@ public class InventorySlot : MonoBehaviour
     // 해당 슬롯에 더 저장할 수 있는지 확인
     public bool CanSave(int id)
     {
-        return !IsEmpty && (data.Id == id) && !isFull;
+        return !IsEmpty && (Data.Id == id) && !isFull;
     }
 
     #region Amount
@@ -94,14 +94,14 @@ public class InventorySlot : MonoBehaviour
     {
         int remain = 0;
 
-        if(amount + _amount > data.MaxAmount)
+        if(Amount + _amount > Data.MaxAmount)
         {
-            remain = amount + _amount - data.MaxAmount;
-            amount = data.MaxAmount;
+            remain = Amount + _amount - Data.MaxAmount;
+            Amount = Data.MaxAmount;
         }
         else
         {
-            amount += _amount;
+            Amount += _amount;
         }
 
         UpdateAmountText();
@@ -112,9 +112,9 @@ public class InventorySlot : MonoBehaviour
     // 아이템 양 감소
     public void DecreaseAmount(int _amount)
     {
-        amount -= _amount;
+        Amount -= _amount;
 
-        if(amount == 0)
+        if(Amount == 0)
         {
             ClearSlot();
         }
@@ -124,15 +124,12 @@ public class InventorySlot : MonoBehaviour
         }
     }
 
-    // 아이템 수량 반환
-    public int GetAmount() => amount;
-
     // 수량 텍스트 업데이트
     private void UpdateAmountText()
     {
-        if(amount > 1)
+        if(Amount > 1)
         {
-            amountTxt.text = amount.ToString();
+            amountTxt.text = Amount.ToString();
             amountTxt.gameObject.SetActive(true);
         }
         else
@@ -141,19 +138,4 @@ public class InventorySlot : MonoBehaviour
         }
     }
     #endregion
-
-    // 드랍 아이템 정보 반환
-    public GameObject GetDropItem() => data.DropPrefab;
-
-    // 슬롯 버튼이 클릭되었을 때 실행
-    private void OnSlotButtonClick()
-    {
-        if (IsEmpty)
-        {
-            GameManager.Instance.UIManager.ItemButton.HideButtons();
-            return;
-        }
-
-        GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(data.Type, index);
-    }
 }

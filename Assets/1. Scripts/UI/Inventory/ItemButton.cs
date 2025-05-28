@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ItemButton : ButtonHandler
 {
@@ -13,13 +12,9 @@ public class ItemButton : ButtonHandler
         Drop,
     }
 
-    int slotIndex;
-
     // 아이템 타입에 따른 버튼 표시
-    public void DisplayItemButtons(ItemType type, int _slotIndex)
+    public void DisplayItemButtons(ItemType type)
     {
-        slotIndex = _slotIndex;
-
         bool isEquipable = type == ItemType.Equipable;
         bool isConsumable = type == ItemType.Consumalbe;
         bool canSetQuickslot = isEquipable || isConsumable;
@@ -54,11 +49,11 @@ public class ItemButton : ButtonHandler
                 break;
 
             case ItemButtonType.Move:
-                // 다른 슬롯 클릭 시에 아이템 이동
+                GameManager.Instance.Inventory.ActiveSwapMode();
                 break;
 
             case ItemButtonType.Drop:
-                GameManager.Instance.Inventory.DropItem(slotIndex);
+                GameManager.Instance.Inventory.DropItem();
                 break;
         }
     }

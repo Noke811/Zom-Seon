@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -6,6 +7,8 @@ public class Inventory : MonoBehaviour
     InventorySlot[] slots;
     [SerializeField] int inventoryCount;
     [SerializeField] Transform dropPosition;
+
+    int selectedIndex;
 
     public bool IsSwapMode { get; private set; }
 
@@ -18,6 +21,15 @@ public class Inventory : MonoBehaviour
             slots[i].Init(i);
             slots[i].gameObject.SetActive(i < inventoryCount ? true : false);
         }
+
+        IsSwapMode = false;
+    }
+
+    // 인벤토리 UI가 다시 활성화되었을 때의 초기화
+    private void OnEnable()
+    {
+        IsSwapMode = false;
+        ChangeSelectedSlot(-1);
     }
 
     // 인벤토리에 아이템 추가
@@ -57,15 +69,51 @@ public class Inventory : MonoBehaviour
     }
 
     // 해당 슬롯 아이템 버리기
-    public void DropItem(int index)
+    public void DropItem()
     {
-        Instantiate(slots[index].GetDropItem(), dropPosition.position + dropPosition.forward, Quaternion.identity);
-        slots[index].DecreaseAmount(1);
+        Instantiate(slots[selectedIndex].Data.DropPrefab, dropPosition.position + dropPosition.forward, Quaternion.identity);
+        slots[selectedIndex].DecreaseAmount(1);
     }
 
-    // 
-    public void SwapItem(int index)
+    // 스왑 모드 활성화
+    public void ActiveSwapMode()
     {
+        IsSwapMode = true;
+        GameManager.Instance.UIManager.ItemButton.HideButtons();
+    }
 
+    // 슬롯 버튼을 눌렀을 때 해당하는 버튼이 보여짐
+    public void ChangeSelectedSlot(int index)
+    {
+        if(selectedIndex == index) return;
+
+        if (IsSwapMode)
+        {
+            ItemData tempData = slots[selectedIndex].Data;
+            int tempAmount = slots[selectedIndex].Amount;
+
+            if (slots[index].IsEmpty)
+            {
+                slots[selectedIndex].ClearSlot();
+            }
+            else
+            {
+                slots[selectedIndex].SetSlot(slots[index].Data, slots[index].Amount);
+            }
+            slots[index].SetSlot(tempData, tempAmount);
+
+            IsSwapMode = false;
+        }
+
+        selectedIndex = index;
+
+        if(selectedIndex == -1 || slots[selectedIndex].IsEmpty)
+        {
+            GameManager.Instance.UIManager.ItemButton.HideButtons();
+        }
+        else
+        {
+            GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(slots[selectedIndex].Data.Type);
+        }
     }
 }
