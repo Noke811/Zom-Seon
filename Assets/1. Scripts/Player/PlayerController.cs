@@ -4,13 +4,13 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Moving")]
-    public float moveSpeed;
     public float jumpForce;
+    public float _baseMoveSpeed;
     private Vector2 _moveInput;
     private Rigidbody _rigidbody;
     private Vector3 _direction;
-    // public LayerMask groundLayerMask;
-    // public float groundRayDistance;
+    private float _dashSpeed;
+    public float curMoveSpeed;
     
     private bool _isGround;
     private int _isRun;
@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
         _isJump = Animator.StringToHash("isJump");
         
         //Cursor.lockState = CursorLockMode.Locked;
+
+        curMoveSpeed = _baseMoveSpeed;
     }
 
     private void FixedUpdate()
@@ -50,20 +52,10 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         _direction = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-        _direction *= moveSpeed;
+        _direction *= curMoveSpeed;
         _direction.y = _rigidbody.velocity.y;
         
         _rigidbody.velocity = _direction;
-        
-        // Vector3 moveInput = new Vector3(_moveInput.x, 0, _moveInput.y);
-        // Vector3 worldMove = transform.TransformDirection(moveInput);
-        // if (worldMove.magnitude > 1)
-        //     worldMove.Normalize();
-        // Vector3 moveVelocity = worldMove * moveSpeed;
-        // rigidbody.velocity = new Vector3(moveVelocity.x, rigidbody.velocity.y, moveVelocity.z);
-
-        // float moveTime = moveSpeed * Time.deltaTime;
-        // rigidbody.MovePosition(transform.position + moveInput * moveTime);
     }
 
     private void Look()
@@ -77,12 +69,12 @@ public class PlayerController : MonoBehaviour
     
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (context.performed)
         {
             _moveInput = context.ReadValue<Vector2>();
             _animator.SetBool(_isRun, true);
         }
-        else if (context.phase == InputActionPhase.Canceled)
+        else if (context.canceled)
         {
             _moveInput = Vector2.zero;
             _animator.SetBool(_isRun, false);
@@ -100,28 +92,6 @@ public class PlayerController : MonoBehaviour
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    // bool IsGround Ray
-    // private bool IsGround()
-    // {
-    //     Ray[] rays = new Ray[4]
-    //     {
-    //         new Ray(transform.position + (transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f),
-    //         new Ray(transform.position + (-transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f),
-    //         new Ray(transform.position + (transform.right * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f),
-    //         new Ray(transform.position + (-transform.right * 0.2f) + (transform.up * 0.01f), Vector3.down * 100.0f)
-    //     };
-    //
-    //     for (int i = 0; i < rays.Length; i++)
-    //     {
-    //         if (Physics.Raycast(rays[i], groundRayDistance, groundLayerMask))
-    //         {
-    //             return true;
-    //         }
-    //     }
-    //
-    //     return false;
-    // }
-
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground"))
@@ -137,14 +107,77 @@ public class PlayerController : MonoBehaviour
     }
 
     // 상호작용 키 (F)
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("상호작용");
+        }
+    }
 
     // 인벤토리 키 (I)
+    public void OnInventory(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("인벤토리");
+            // 인벤토리 UI 열기
+            GameManager.Instance.UIManager.SetInventoryUI();
+        }
+    }
 
     // 제작 메뉴 (Tab)
+    public void OnCraft(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("제작 메뉴");
+            // GameManager.Instance.UIManager.제작UI토글();
+        }
+    }
 
     // 퀵슬롯 (1 ~ 5)
+    public void OnQuickSlot(InputAction.CallbackContext context)
+    {
+        int controlNum = int.Parse(context.control.name);
+        if (context.started)
+            switch (controlNum)
+            {
+                case 1:
+                    Debug.Log("1번 슬롯 선택");
+                    break;
+                case 2:
+                    Debug.Log("2번 슬롯 선택");
+                    break;
+                case 3:
+                    Debug.Log("3번 슬롯 선택");
+                    break;
+                case 4:
+                    Debug.Log("4번 슬롯 선택");
+                    break;
+                case 5:
+                    Debug.Log("5번 슬롯 선택");
+                    break;
+            }
+    }
 
     // 공격 (좌클릭)
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("공격!");
+            // 공격 애니메이션 실행
+            // _animator.SetTrigger("Attack");
+        }
+    }
 
     // 달리기 (쉬프트)
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            curMoveSpeed = _dashSpeed = (_baseMoveSpeed * 1.4f);
+        else if (context.canceled)
+            curMoveSpeed = _baseMoveSpeed;
+    }   
 }

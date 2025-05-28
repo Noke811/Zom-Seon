@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
         setQuickslotButton.Init();
 
         SetInteractableInfo(null);
-        SetInventoryUI(false);
+        inventoryUI.SetActive(false);
     }
 
     private void Update()

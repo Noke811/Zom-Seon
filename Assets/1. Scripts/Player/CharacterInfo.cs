@@ -18,7 +18,6 @@ public class CharacterInfo : MonoBehaviour
             return totalAtk;
         }
     }
-
     public int FinalDef
     {
         get
@@ -26,6 +25,16 @@ public class CharacterInfo : MonoBehaviour
             int totalDef = _baseDef + equipDefBonus;
             return totalDef;
         }
+    }
+    
+    public void Add()
+    {
+
+    }
+
+    public void Subtract()
+    {
+
     }
 
     private void Start()
