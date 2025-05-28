@@ -2,60 +2,31 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
-    public static GameManager Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                instance = new GameObject("GameManager").AddComponent<GameManager>();
-            }
-            return instance;
-        }
-    }
+    public static GameManager Instance { get; private set; }
 
-    public UIManager UIManager { get; private set; }
-    public Transform Player { get; private set; }
-
-    [Header("Time Control")]
-    public bool IsNight = false;
+    [SerializeField] Player player;
+    public Player Player => player;
+    [SerializeField] UIManager uiManager;
+    public UIManager UIManager => uiManager;
+    [SerializeField] Inventory inventory;
+    public Inventory Inventory => inventory;
+    public DayAndNight DayCycle { get; private set; }
 
     private void Awake()
     {
-        if(instance == null)
+        if(Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if(Instance != this)
         {
-            if(instance != this)
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
-    }
 
-    private void Start()
-    {
-        Player = GameObject.FindWithTag("Player")?.transform;
-    }
+        uiManager.Init();
+        inventory.Init();
 
-    private void Update()
-    {
-        // 테스트용: N 키를 눌러 밤/낮 전환
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            IsNight = !IsNight;
-            Debug.Log(IsNight ? "밤이 되었습니다" : "낮이 되었습니다");
-        }
+        DayCycle = GetComponentInChildren<DayAndNight>();
     }
-
-    #region Initialization
-    public void Init(UIManager uiManager)
-    {
-        UIManager = uiManager;
-    }
-    #endregion
 }

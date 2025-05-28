@@ -18,7 +18,6 @@ public class CharacterInfo : MonoBehaviour
             return totalAtk;
         }
     }
-
     public int FinalDef
     {
         get
@@ -27,9 +26,14 @@ public class CharacterInfo : MonoBehaviour
             return totalDef;
         }
     }
-
-    private void Start()
+    
+    public void Add()
     {
-        CharacterManager.Instance.Player.info = this;
+
+    }
+
+    public void Subtract()
+    {
+
     }
 }
