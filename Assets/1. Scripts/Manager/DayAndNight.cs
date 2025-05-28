@@ -37,10 +37,16 @@ public class DayAndNight : MonoBehaviour
     {
         time = (time + timeRate * Time.deltaTime) % 1.0f;
 
-        if (time >= 0.5f && !IsNight) IsNight = true;
-        else if(time < 0.5f && IsNight) IsNight = false;
+        if (0.25f <= time && time <= 0.75f)
+        {
+            if (IsNight) IsNight = false;
+        }
+        else
+        {
+            if (!IsNight) IsNight = true;
+        }
 
-            UpdateLighting(sun, sunColor, sunIntensity);
+        UpdateLighting(sun, sunColor, sunIntensity);
         UpdateLighting(moon, moonColor, moonIntensity);
 
         RenderSettings.ambientIntensity = lightingIntensityMultiplier.Evaluate(time);
