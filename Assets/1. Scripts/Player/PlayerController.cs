@@ -68,12 +68,12 @@ public class PlayerController : MonoBehaviour
     
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (context.performed)
         {
             _moveInput = context.ReadValue<Vector2>();
             _animator.SetBool(_isRun, true);
         }
-        else if (context.phase == InputActionPhase.Canceled)
+        else if (context.canceled)
         {
             _moveInput = Vector2.zero;
             _animator.SetBool(_isRun, false);
@@ -106,10 +106,34 @@ public class PlayerController : MonoBehaviour
     }
 
     // 상호작용 키 (F)
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("상호작용");
+        }
+    }
 
     // 인벤토리 키 (I)
+    public void OnInventory(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("인벤토리");
+            // 인벤토리 UI 열기
+            GameManager.Instance.UIManager.SetInventoryUI();
+        }
+    }
 
     // 제작 메뉴 (Tab)
+    public void OnCraft(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("제작 메뉴");
+            // GameManager.Instance.UIManager.제작UI토글();
+        }
+    }
 
     // 퀵슬롯 (1 ~ 5)
     public void OnQuickSlot(InputAction.CallbackContext context)
@@ -151,7 +175,7 @@ public class PlayerController : MonoBehaviour
     public void OnDash(InputAction.CallbackContext context)
     {
         if (context.performed)
-            curMoveSpeed = _dashSpeed = _baseMoveSpeed * 1.4f;
+            curMoveSpeed = _dashSpeed = (_baseMoveSpeed * 1.4f);
         else if (context.canceled)
             curMoveSpeed = _baseMoveSpeed;
     }   

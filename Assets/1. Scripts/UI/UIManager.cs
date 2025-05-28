@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         SetInteractableInfo(null);
-        SetInventoryUI(false);
+        inventoryUI.SetActive(false);
     }
 
     // 상호작용 가능한 오브젝트 정보 표시 / 숨기기
@@ -37,9 +37,9 @@ public class UIManager : MonoBehaviour
         interactableInfo.SetActive(true);
     }
 
-    // 인벤토리 UI 띄우기 / 숨기기
-    public void SetInventoryUI(bool show)
+    // 인벤토리 UI 띄우기 / 숨기기    
+    public void SetInventoryUI()
     {
-        inventoryUI.SetActive(show);
+        inventoryUI.SetActive(!inventoryUI.activeSelf);
     }
 }
