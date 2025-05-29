@@ -158,5 +158,5 @@ public class PlayerController : MonoBehaviour
             curMoveSpeed = _dashSpeed = (_baseMoveSpeed * 1.4f);
         else if (context.canceled)
             curMoveSpeed = _baseMoveSpeed;
-    }   
+    }
 }
