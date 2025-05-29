@@ -84,7 +84,7 @@ public class BuildingManager : MonoBehaviour
         if (previewObject == null) return;
         
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, buildableLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, 5f, buildableLayer))
         {
             previewObject.SetActive(true);
             currentPosition = hit.point;
