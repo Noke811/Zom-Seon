@@ -97,6 +97,7 @@ public class ZombieAI : MonoBehaviour
             case ZombieState.Chasing:
                 ChaseUpdate();            // 플레이어 추적 및 사거리 확인
                 DetectPlayerOrFence();    // 감지 갱신 (추적 중에도 재판단)
+                TryAttackTargets();
                 break;
 
             case ZombieState.AttackingFence:
@@ -184,8 +185,7 @@ public class ZombieAI : MonoBehaviour
             lastAttackTime = Time.time;
 
             // 좀비 전방 1.5 유닛 지점, 반경 1 내의 충돌체 탐색 (Layer 제한 없음)
-            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1.5f, 1f);
-
+            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * attackRange, attackRange, attackTargetMask);
             foreach (var hit in hits)
             {
                 // 감지된 오브젝트 데미지 적용
@@ -196,6 +196,12 @@ public class ZombieAI : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + transform.forward * attackRange, attackRange);
     }
 
     // 배회 상태에서의 이동 및 대기 처리

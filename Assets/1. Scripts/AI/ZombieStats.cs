@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 좀비의 능력치와 체력 관리, 데미지 처리 등을 담당
-public class ZombieStats : MonoBehaviour, IDamageable
+public class ZombieStats : MonoBehaviour, IDamagable
 {
     // 좀비의 최대 체력
     public int maxHealth = 100;

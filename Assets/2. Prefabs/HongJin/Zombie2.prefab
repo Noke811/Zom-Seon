@@ -390,7 +390,7 @@ MonoBehaviour:
   damage: 10
   chaseKeepRange: 10
   player: {fileID: 0}
-  fenceMask:
+  attackTargetMask:
     serializedVersion: 2
     m_Bits: 136
 --- !u!1 &1070194832081281620
