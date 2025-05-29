@@ -11,6 +11,8 @@ public class TabManager : MonoBehaviour
 
     private GameObject currentSlotBase;
 
+    public bool IsActive => architectMenuBase.activeSelf;
+
     void Start()
     {
         if (architectMenuBase != null)
@@ -33,29 +35,26 @@ public class TabManager : MonoBehaviour
         }
     }
 
-    void Update()
+    public void SetMenu()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (architectMenuBase != null)
         {
-            if (architectMenuBase != null)
-            {
-                architectMenuBase.SetActive(!architectMenuBase.activeSelf);
+            architectMenuBase.SetActive(!architectMenuBase.activeSelf);
 
-                if (architectMenuBase.activeSelf && tabButtons.Count > 0)
+            if (architectMenuBase.activeSelf && tabButtons.Count > 0)
+            {
+                OnTabButtonClicked(0);
+            }
+            else
+            {
+                foreach (var slotBase in slotBases)
                 {
-                    OnTabButtonClicked(0);
-                }
-                else
-                {
-                    foreach (var slotBase in slotBases)
+                    if (slotBase != null)
                     {
-                        if (slotBase != null)
-                        {
-                            slotBase.SetActive(false);
-                        }
-                    } 
-                    currentSlotBase = null;
+                        slotBase.SetActive(false);
+                    }
                 }
+                currentSlotBase = null;
             }
         }
     }

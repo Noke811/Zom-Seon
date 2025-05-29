@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] SetQuickslotButton setQuickslotButton;
     public SetQuickslotButton SetQuickslotButton => setQuickslotButton;
 
+    [Header("Architect UI")]
+    [SerializeField] TabManager tabManager;
+
     public bool IsUIActive { get; private set; }
 
     // UI 매니저 초기화
@@ -56,6 +59,14 @@ public class UIManager : MonoBehaviour
         if(!show) setQuickslotButton.HideButtons();
 
         ControlCursor(show);
+    }
+
+    // 제작 UI 띄우기 / 숨기기
+    public void SetArchitectUI()
+    {
+        tabManager.SetMenu();
+
+        ControlCursor(tabManager.IsActive);
     }
 
     // UI가 켜지고 꺼짐에 따라 마우스 커서를 보이거나 안 보이게 설정

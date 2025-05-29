@@ -130,8 +130,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            Debug.Log("제작 메뉴");
-            // GameManager.Instance.UIManager.제작UI토글();
+            GameManager.Instance.UIManager.SetArchitectUI();
         }
     }
 

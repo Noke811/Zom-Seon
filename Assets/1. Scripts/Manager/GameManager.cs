@@ -4,6 +4,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    private const int PLAYER_LAYER = 3;
+
     [SerializeField] Player player;
     public Player Player => player;
     [SerializeField] UIManager uiManager;
@@ -28,5 +30,10 @@ public class GameManager : MonoBehaviour
         inventory.Init();
 
         DayCycle = GetComponentInChildren<DayAndNight>();
+    }
+
+    private void Start()
+    {
+        Camera.main.cullingMask = ~(1 << PLAYER_LAYER);
     }
 }
