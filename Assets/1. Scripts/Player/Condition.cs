@@ -1,12 +1,23 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
+public interface IDamageable
+{
+    void TakeDamage(int damage);
+}
 
 public class Condition : MonoBehaviour
 {
     public float curValue;
     public float maxValue;
     public float passiveValue;
-    public Image uiBar;
+    public Slider slider;
+
+    private void Awake()
+    {
+        slider = GetComponent<Slider>();
+    }
 
     private void Start()
     {
@@ -20,6 +31,16 @@ public class Condition : MonoBehaviour
 
     private void UIBarUpdate()
     {
-        uiBar.fillAmount = curValue / maxValue;
+        slider.value = curValue / maxValue;
+    }
+
+    public void Add(float Value)
+    {
+        curValue = Mathf.Min(curValue + Value, maxValue);
+    }
+
+    public void Subtract(float Value)
+    {
+        curValue = Mathf.Max(curValue - Value, 0f);
     }
 }

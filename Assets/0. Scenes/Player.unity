@@ -724,6 +724,8 @@ MonoBehaviour:
   interactableName: {fileID: 799058332}
   interactableDesc: {fileID: 1450831632}
   inventoryUI: {fileID: 354646176}
+  itemButton: {fileID: 0}
+  setQuickslotButton: {fileID: 0}
 --- !u!114 &103461353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -958,6 +960,7 @@ GameObject:
   m_Component:
   - component: {fileID: 124481133}
   - component: {fileID: 124481134}
+  - component: {fileID: 124481135}
   m_Layer: 5
   m_Name: Hp Bar
   m_TagString: Untagged
@@ -1036,7 +1039,35 @@ MonoBehaviour:
   m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &124481135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124481132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7846e07dc945748ae4dcaed89952ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curValue: 0
+  maxValue: 100
+  passiveValue: 2
+  slider: {fileID: 0}
 --- !u!1 &138572121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1579,6 +1610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 185789564}
   - component: {fileID: 185789565}
+  - component: {fileID: 185789566}
   m_Layer: 5
   m_Name: Hunger Bar
   m_TagString: Untagged
@@ -1658,6 +1690,22 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &185789566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185789563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7846e07dc945748ae4dcaed89952ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curValue: 0
+  maxValue: 100
+  passiveValue: 1
+  slider: {fileID: 0}
 --- !u!1 &204532905
 GameObject:
   m_ObjectHideFlags: 0
@@ -2315,6 +2363,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventorySlot: {fileID: 2015326827}
   inventoryCount: 10
+  dropPosition: {fileID: 0}
+  quickslotUI: {fileID: 0}
 --- !u!114 &354646178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4186,6 +4236,7 @@ GameObject:
   m_Component:
   - component: {fileID: 841143868}
   - component: {fileID: 841143869}
+  - component: {fileID: 841143870}
   m_Layer: 5
   m_Name: Stamina Bar
   m_TagString: Untagged
@@ -4265,6 +4316,22 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &841143870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841143867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7846e07dc945748ae4dcaed89952ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curValue: 0
+  maxValue: 100
+  passiveValue: 2
+  slider: {fileID: 0}
 --- !u!1 &862659127
 GameObject:
   m_ObjectHideFlags: 0
@@ -4500,6 +4567,7 @@ GameObject:
   m_Component:
   - component: {fileID: 904525603}
   - component: {fileID: 904525604}
+  - component: {fileID: 904525605}
   m_Layer: 5
   m_Name: PlayerInfo
   m_TagString: Untagged
@@ -4556,6 +4624,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &904525605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904525602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aed10873efd128f4a8c33f20c5b8d420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 0}
+  stamina: {fileID: 0}
+  hunger: {fileID: 0}
+  thirst: {fileID: 0}
 --- !u!1001 &939831670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7460,6 +7544,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1914598127}
   - component: {fileID: 1914598128}
+  - component: {fileID: 1914598129}
   m_Layer: 5
   m_Name: Thirst Bar
   m_TagString: Untagged
@@ -7539,6 +7624,22 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1914598129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914598126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7846e07dc945748ae4dcaed89952ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curValue: 0
+  maxValue: 100
+  passiveValue: 2
+  slider: {fileID: 0}
 --- !u!1 &1939458658
 GameObject:
   m_ObjectHideFlags: 0
@@ -7906,7 +8007,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2068117222}
   m_CullTransparentMesh: 1
---- !u!1001 &6308585831709778398
+--- !u!1001 &6954376327224930210
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -7914,47 +8015,51 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 2743444203084098870, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+      propertyPath: uiCondition
+      value: 
+      objectReference: {fileID: 904525605}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6609203331005595793, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 5764341482833933803, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8496478362402570386, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
+    - target: {fileID: 6256903272524234996, guid: 25c16b2f806adec40a4979c33602e799, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
@@ -7969,6 +8074,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 748811046}
   - {fileID: 862659131}
-  - {fileID: 6308585831709778398}
+  - {fileID: 6954376327224930210}
   - {fileID: 1939458659}
   - {fileID: 103461356}
