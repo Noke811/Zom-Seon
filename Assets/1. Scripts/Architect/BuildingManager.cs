@@ -4,14 +4,36 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
-    public float gridsize = 1f;
-    public LayerMask BuildableLayer;
-    public Material previewMaterial;
-    public Material previewMaterialInvalid;
-    
-    private GameObject previewObject;
-    public Camera mainCamera;
+    public static BuildingManager Instance { get; private set; }
+
+    public LayerMask buildableLayer; // 건축 가능한 지면 레이어
+    public LayerMask obstacleLayer; // 건축 불가능한 레이어
+
+    public Material previewMaterial; // 배치 가능할 때의 Material
+    public Material previewMaterialInvalid; // 배치 불가능할 때의 Material
+
+    public float buildableDistance = 10f;
+
+    private Camera mainCamera;
     private ArchitectData selectedItem;
+    private GameObject previewObject;
+    private Vector3 currentPosition;
+    private Bounds previewBounds;
+
+    private bool isBuildingMode = false; // 건설 모드
+    private bool canPlace = false; // 배치 가능한지 여부
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -20,161 +42,195 @@ public class BuildingManager : MonoBehaviour
 
     void Update()
     {
-        if (selectedItem != null && selectedItem.isPlaceable)
+        if(!isBuildingMode) // 건설 모드가 아니면 실행하지 않음.
         {
-            UpdatePreviewObjectPosition();
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                TryPlaceObject();
-            }
+            return;
         }
+
+        UpdatePreviewPosition();
+        HandleRotationInput();
+        HandlePlacementInput();
+        HandleCancelInput();
     }
 
     public void HandleItemSelected(ArchitectData item)
     {
+        if (isBuildingMode)
+        {
+            CancelPlacement();
+        }
+        
         selectedItem = item;
+
+        if (selectedItem == null) return;
 
         if (selectedItem.isPlaceable)
         {
-            ShowPreviewObject();
+            // 건설 모드 시작
+            isBuildingMode = true;
+            ShowPreview();
         }
         else if (selectedItem.isTool)
         {
+            // 도구 제작
             TryCraftTool();
         }
         else
         {
-            Debug.Log("선택한 아이템은 설치나 제작이 불가능합니다.");
             selectedItem = null;
         }
     }
 
-    void ShowPreviewObject()
+    private void UpdatePreviewPosition()
     {
-        DestroyPreviewObject();
-        if (selectedItem != null && selectedItem.itemPrefab != null && selectedItem.isPlaceable)
+        if (previewObject == null) return;
+        
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, buildableDistance, buildableLayer))
         {
-            previewObject = Instantiate(selectedItem.itemPrefab, Vector3.zero, Quaternion.identity);
-            SetPreviewMaterial(true);
+            previewObject.SetActive(true);
+            currentPosition = hit.point;
+            previewObject.transform.position = currentPosition;
+
+            CheckIfCanPlace();
         }
         else
         {
-            Debug.Log("설치 불가");
+            previewObject.SetActive(false);
+            canPlace = false;
         }
     }
 
-    void DestroyPreviewObject()
+    private void HandleRotationInput()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RotatePreviewObject();
+        }
+    }
+
+    private void HandlePlacementInput()
+    {
+        if (Input.GetMouseButtonDown(0) && canPlace)
+        {
+            TryPlaceObject();
+        }
+    }
+
+    private void HandleCancelInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CancelPlacement();
+        }
+    }
+
+    private void ShowPreview()
+    {
+        // 아이템의 미리보기를 생성합니다.
+        if (selectedItem == null || selectedItem.itemPreviewPrefab == null) return;
+        
+        previewObject = Instantiate(selectedItem.itemPreviewPrefab, Vector3.zero, Quaternion.identity);
+        
+        Collider previewCollider = previewObject.GetComponent<Collider>();
+        if (previewCollider != null)
+        {
+            previewCollider.enabled = false;
+        }
+        Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
+        if (renderers.Length > 0)
+        {
+            previewBounds = new Bounds(renderers[0].bounds.center, Vector3.zero);
+            foreach (Renderer renderer in renderers)
+            {
+                previewBounds.Encapsulate(renderer.bounds);
+            }
+        }
+    }
+
+    private void RotatePreviewObject()
+    {
+        if (previewObject == null) return;
+        
+        previewObject.transform.Rotate(Vector3.up, 45f);
+        CheckIfCanPlace();
+    }
+
+    private void CheckIfCanPlace()
+    {
+        canPlace = CanPlaceObject();
+        SetPreviewMaterial(canPlace);
+    }
+
+    private void TryPlaceObject()
+    {
+        // 실제 건축물을 배치하는 로직
+        if (!canPlace)
+        {
+            Debug.Log("Can't place object");
+            return;
+        }
+        
+        GameObject newObject = Instantiate(selectedItem.itemPrefab, currentPosition, previewObject.transform.rotation);
+        newObject.layer = LayerMask.NameToLayer("Foundation"); //TODO: 예시 레이어. 이후 변경 필요
+        Debug.Log(selectedItem.itemName + "건설 완료");
+        CancelPlacement();
+    }
+
+    private void CancelPlacement()
+    {
+        // 건설모드 종료
+        isBuildingMode = false;
         if (previewObject != null)
         {
             Destroy(previewObject);
-            previewObject = null;
+        }
+        previewObject = null;
+        selectedItem = null;
+        canPlace = false;
+    }
+
+    private bool CanPlaceObject()
+    {
+        // 다른 오브젝트들의 레이어와의 충돌을 확인하여 건설 가능 여부를 반환.
+        return !Physics.CheckBox(currentPosition, previewBounds.extents, previewObject.transform.rotation, obstacleLayer);
+    }
+
+    private void SetPreviewMaterial(bool isValid)
+    {
+        // 배치 가능 여부에 따라 미리보기 오브젝트의 Material을 변경합니다.
+        if (previewObject == null) return;
+        
+        Material newMaterial = isValid ? previewMaterial : previewMaterialInvalid;
+        foreach (var renderer in previewObject.GetComponentsInChildren<Renderer>())
+        {
+            renderer.material = newMaterial;
         }
     }
 
-    void UpdatePreviewObjectPosition()
+    private void TryCraftTool()
     {
-        if (previewObject != null && selectedItem != null)
+        // 도구 제작 시도
+        if (HasMaterials())
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, BuildableLayer))
-            {
-                Vector3Int gridPosition = GetGridPosition(hit.point);
-                previewObject.transform.position = gridPosition;
-
-                bool canBuild = true;
-                
-                if (selectedItem.canBuildableTags.Count > 0 && !selectedItem.canBuildableTags.Contains(hit.collider.tag))
-                    canBuild = false;
-                SetPreviewMaterial(canBuild);
-            }
-            else
-            {
-                previewObject.transform.position = ray.GetPoint(100f);
-                SetPreviewMaterial(false);
-            }
-        }
-    }
-
-    Vector3Int GetGridPosition(Vector3 worldPosition)
-    {
-        return new Vector3Int(
-            Mathf.RoundToInt(worldPosition.x / gridsize) * (int)gridsize,
-            Mathf.RoundToInt(worldPosition.y / gridsize) * (int)gridsize,
-            Mathf.RoundToInt(worldPosition.z / gridsize) * (int)gridsize
-        );
-    }
-
-    void TryPlaceObject()
-    {
-        if (previewObject != null)
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, BuildableLayer))
-            {
-                bool canBuild = true;
-                
-                if (selectedItem.canBuildableTags.Count > 0 && !selectedItem.canBuildableTags.Contains(hit.collider.tag))
-                    canBuild = false;
-                if (canBuild)
-                {
-                    Instantiate(previewObject, hit.point, Quaternion.identity);
-                    DestroyPreviewObject();
-                }
-                else
-                {
-                    {
-                        Debug.Log("설치 불가");
-                    }
-                }
-            }
-        }
-    }
-
-    void TryCraftTool()
-    {
-        if (selectedItem != null && selectedItem.isTool)
-        {
-            // 인벤토리 추가 필요
-            Debug.Log(selectedItem.itemName + "제작성공");
-            selectedItem = null;
+            ConsumeMaterials();
         }
         else
         {
-            //재료 부족 시
-            Debug.Log("제작 실패");
+            Debug.Log("Not enough materials");
         }
+        selectedItem = null;
     }
 
-    bool HasMaterials()
+    private bool HasMaterials()
     {
-        //인벤토리 연동
+        // TODO: 인벤토리 연동 필요
         return true;
     }
 
-    void ConsumeMaterials()
+    private void ConsumeMaterials()
     {
-        //인벤토리 연동
-        Debug.Log("재료 소모");
-    }
-
-    void SetPreviewMaterial(bool isValid)
-    {
-        if (previewObject != null && selectedItem != null)
-        {
-            Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
-            foreach (var renderer in renderers)
-            {
-                if (isValid)
-                {
-                    renderer.material = previewMaterial;
-                }
-                else
-                {
-                    renderer.material = previewMaterialInvalid;
-                }
-            }
-        }
+        // TODO: 인벤토리 연동 필요
+        Debug.Log("Consume materials");
     }
 }
