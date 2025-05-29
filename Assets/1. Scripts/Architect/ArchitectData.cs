@@ -10,8 +10,6 @@ public class ArchitectData : ScriptableObject
     public GameObject itemPrefab;
     public Dictionary<string, int> requiredMaterials;
     public bool isPlaceable;
-    public List<string> canBuildableTags;
     public bool isTool;
     public Material originalMaterial;
-    public bool isFoundation;
 }

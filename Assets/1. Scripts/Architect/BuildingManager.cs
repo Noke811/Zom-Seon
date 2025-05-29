@@ -5,18 +5,15 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
-    public float gridSize = 1f;
     public LayerMask buildableLayer;
     public Material previewMaterial;
     public Material previewMaterialInvalid;
-    //public AudioClip placeSound;
-    //public GameObject placeEffect;
     
     private GameObject previewObject;
     public Camera mainCamera;
     private ArchitectData selectedItem;
-    private Vector3Int currentGridPosition;
-
+    private Vector3 currentPosition;
+    
     void Start()
     {
         mainCamera = Camera.main;
@@ -27,7 +24,6 @@ public class BuildingManager : MonoBehaviour
         HandleInput();
         UpdatePreview();
     }
-
     void HandleInput()
     {
         if (selectedItem == null)
@@ -59,9 +55,10 @@ public class BuildingManager : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, buildableLayer))
         {
-            currentGridPosition = GetGridPosition(hit.point);
-            previewObject.transform.position = currentGridPosition;
-            bool canBuild = CanPlaceObject(currentGridPosition);
+            currentPosition = hit.point;
+            previewObject.transform.position = currentPosition;
+            bool canBuild = CanPlaceObject(currentPosition);
+            Debug.Log("Raycast Hit: " + hit.collider.gameObject.name);
             SetPreviewMaterial(canBuild);
         }
         else
@@ -70,54 +67,20 @@ public class BuildingManager : MonoBehaviour
             SetPreviewMaterial(false);
         }
     }
-    Vector3Int GetGridPosition(Vector3 worldPosition)
-    {
-        return new Vector3Int(
-            Mathf.RoundToInt(worldPosition.x / gridSize) * (int)gridSize,
-            Mathf.RoundToInt(worldPosition.y / gridSize) * (int)gridSize,
-            Mathf.RoundToInt(worldPosition.z / gridSize) * (int)gridSize
-        );
-    }
-    bool CanPlaceObject(Vector3Int position)
+    bool CanPlaceObject(Vector3 position)
     {
         Collider[] colliders = Physics.OverlapBox(position, previewObject.GetComponent<Collider>().bounds.size / 2f, previewObject.transform.rotation, buildableLayer);
-        if (colliders.Length > 0) return false;
-        
-        if (selectedItem.isFoundation)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(position + Vector3.up * 0.5f, Vector3.down, out hit, 1f, buildableLayer))
-            {
-                if (!hit.collider.CompareTag("Ground")) return false;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else if (selectedItem.canBuildableTags.Count > 0)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(position + Vector3.up * 0.5f, Vector3.down, out hit, 1f, buildableLayer))
-            {
-                if (!selectedItem.canBuildableTags.Contains(hit.collider.tag) && !hit.collider.CompareTag("Foundation")) return false;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        return true;
+        Debug.Log("Colliders Count: " + colliders.Length);
+        return colliders.Length <= 1;
     }
     void TryPlaceObject()
     {
-        if (selectedItem == null || !selectedItem.isPlaceable || !CanPlaceObject(currentGridPosition)) return;
+        if (selectedItem == null || !selectedItem.isPlaceable || !CanPlaceObject(currentPosition)) return;
 
-        GameObject placedObject = Instantiate(selectedItem.itemPrefab, currentGridPosition, previewObject.transform.rotation);
-        
+        GameObject placedObject = Instantiate(selectedItem.itemPrefab, currentPosition, previewObject.transform.rotation);
+
         CancelPlacement();
     }
-
     void CancelPlacement()
     {
         Destroy(previewObject);
@@ -175,7 +138,7 @@ public class BuildingManager : MonoBehaviour
             selectedItem = null;
         }
     }
-
+    
     void RotatePreviewObject()
     {
         if (previewObject != null)

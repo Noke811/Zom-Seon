@@ -7,6 +7,8 @@ TagManager:
   - Fence
   - Ground
   - Buildable
+  - Undefined
+  - Foundation
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - Ground
   - Buildable
   - NPC
-  - 
+  - Foundation
   - 
   - 
   - 
