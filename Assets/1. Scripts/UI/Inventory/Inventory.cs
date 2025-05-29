@@ -223,6 +223,8 @@ public class Inventory : MonoBehaviour
     public void EquipItem()
     {
         GameManager.Instance.Player.Equipment.Equip(slots[selectedIndex].Data.Id);
+        // 장비 착용 시 스테이터스 오르는 로직 필요
+
         equippedIndex = selectedIndex;
         GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
     }
