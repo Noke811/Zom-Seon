@@ -11,15 +11,15 @@ public class ItemButton : ButtonHandler
     }
 
     // 아이템 타입에 따른 버튼 표시
-    public void DisplayItemButtons()
+    public void DisplayItemButtons(bool isEquippedItem = false)
     {
         ItemType type = GameManager.Instance.Inventory.selectedItemType;
         bool isEquipable = type == ItemType.Equipable;
         bool isConsumable = type == ItemType.Consumalbe;
         bool canSetQuickslot = isEquipable || isConsumable;
 
-        buttons[(int)ItemButtonType.Equip].gameObject.SetActive(isEquipable);
-        buttons[(int)ItemButtonType.Unequip].gameObject.SetActive(false); // 요건 나중에 수정 필요
+        buttons[(int)ItemButtonType.Equip].gameObject.SetActive(isEquipable && !isEquippedItem);
+        buttons[(int)ItemButtonType.Unequip].gameObject.SetActive(isEquipable && isEquippedItem); // 요건 나중에 수정 필요
         buttons[(int)ItemButtonType.Eat].gameObject.SetActive(isConsumable);
         buttons[(int)ItemButtonType.Quick].gameObject.SetActive(canSetQuickslot);
         buttons[(int)ItemButtonType.Move].gameObject.SetActive(true);
@@ -34,11 +34,11 @@ public class ItemButton : ButtonHandler
         switch ((ItemButtonType)index)
         {
             case ItemButtonType.Equip:
-                // 장비 장착
+                GameManager.Instance.Inventory.EquipItem();
                 break;
 
             case ItemButtonType.Unequip:
-                // 장비 해제
+                GameManager.Instance.Inventory.UnequipItem();
                 break;
 
             case ItemButtonType.Eat:

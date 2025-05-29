@@ -9,6 +9,7 @@ public class Inventory : MonoBehaviour
     InventorySlot[] slots;
     [SerializeField] int inventoryCount;
     int selectedIndex;
+    int equippedIndex;
     public ItemType selectedItemType => slots[selectedIndex].Data.Type;
     public bool IsSwapMode { get; private set; } // 인벤토리에서 아이템 이동 시에 사용
 
@@ -45,6 +46,8 @@ public class Inventory : MonoBehaviour
         {
             quickslot[i] = -1;
         }
+
+        equippedIndex = -1;
     }
 
     // 인벤토리 UI가 다시 활성화되었을 때의 초기화
@@ -93,10 +96,14 @@ public class Inventory : MonoBehaviour
     // 해당 슬롯 아이템 버리기
     public void DropItem()
     {
-        Instantiate(slots[selectedIndex].Data.DropPrefab, dropPosition.position + dropPosition.forward, Quaternion.identity);
+        if(slots[selectedIndex].Data.Type == ItemType.Equipable)
+            UnequipItem();
 
+        Instantiate(slots[selectedIndex].Data.DropPrefab, dropPosition.position + dropPosition.forward, Quaternion.identity);
         slots[selectedIndex].DecreaseAmount(1);
-        if (slots[selectedIndex].IsEmpty) ReleaseQuickslot();
+
+        if (slots[selectedIndex].IsEmpty)
+            ReleaseQuickslot();
     }
 
     // 해당 아이템 먹기
@@ -137,6 +144,8 @@ public class Inventory : MonoBehaviour
             }
             slots[index].SetSlot(tempData, tempAmount, tempQuickIndex);
 
+            if(selectedIndex == equippedIndex) equippedIndex = index;
+
             IsSwapMode = false;
         }
 
@@ -148,7 +157,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.UIManager.ItemButton.DisplayItemButtons();
+            GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
         }
     }
 
@@ -192,5 +201,37 @@ public class Inventory : MonoBehaviour
                 break;
             }
         }
+    }
+
+    // 퀵슬롯 선택
+    public void SelectQuickslot(int quickNumber)
+    {
+        if (quickslot[quickNumber] == -1) return;
+        selectedIndex = quickslot[quickNumber];
+
+        if(slots[selectedIndex].Data.Type == ItemType.Equipable)
+        {
+            EquipItem();
+        }
+        else
+        {
+            EatItem();
+        }
+    }
+
+    // 장비 장착하기
+    public void EquipItem()
+    {
+        GameManager.Instance.Player.Equipment.Equip(slots[selectedIndex].Data.Id);
+        equippedIndex = selectedIndex;
+        GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
+    }
+
+    // 장비 해제하기
+    public void UnequipItem()
+    {
+        GameManager.Instance.Player.Equipment.Unequip(slots[selectedIndex].Data.Id);
+        equippedIndex = -1;
+        GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
     }
 }
