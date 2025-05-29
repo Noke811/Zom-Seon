@@ -15,6 +15,7 @@ MonoBehaviour:
   itemName: Fence
   itemSprite: {fileID: 21300000, guid: f78f4cdddcc512c4b91f8f1426a0cc73, type: 3}
   itemPrefab: {fileID: 1441409487586802700, guid: aee372cdef904f941a2f125624819024, type: 3}
+  itemPreviewPrefab: {fileID: 1441409487586802700, guid: b3f40d9a43e48be4abc25ed9856d5947, type: 3}
   isPlaceable: 1
   isTool: 0
   originalMaterial: {fileID: 0}
