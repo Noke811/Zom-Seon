@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 3199611318088568048}
   - component: {fileID: 392731054624933761}
   - component: {fileID: 4626526780293339392}
-  - component: {fileID: -8750217165239915295}
+  - component: {fileID: -1846345821004192984}
   m_Layer: 0
   m_Name: Zombie2
   m_TagString: Untagged
@@ -370,7 +370,7 @@ MonoBehaviour:
   moveSpeed: 3
   isElite: 0
   spawner: {fileID: 0}
---- !u!114 &-8750217165239915295
+--- !u!114 &-1846345821004192984
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -384,15 +384,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wanderRadius: 5
   detectRangeDay: 5
-  fieldOfView: 90
+  fieldOfView: 60
   attackRange: 1
   attackCooldown: 0.8
   damage: 10
-  chaseKeepRange: 15
+  chaseKeepRange: 10
   player: {fileID: 0}
   fenceMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 136
 --- !u!1 &1070194832081281620
 GameObject:
   m_ObjectHideFlags: 0

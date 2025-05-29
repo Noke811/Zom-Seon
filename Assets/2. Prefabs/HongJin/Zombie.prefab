@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 3199611318088568048}
   - component: {fileID: 392731054624933761}
   - component: {fileID: -8812169549300961467}
-  - component: {fileID: 9220037976658351959}
+  - component: {fileID: 4464995123763833138}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Untagged
@@ -370,7 +370,7 @@ MonoBehaviour:
   moveSpeed: 1
   isElite: 0
   spawner: {fileID: 0}
---- !u!114 &9220037976658351959
+--- !u!114 &4464995123763833138
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -392,7 +392,7 @@ MonoBehaviour:
   player: {fileID: 0}
   fenceMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 136
 --- !u!1 &1070194832081281620
 GameObject:
   m_ObjectHideFlags: 0
