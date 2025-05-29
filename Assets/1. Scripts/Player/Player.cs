@@ -11,5 +11,6 @@ public class Player : MonoBehaviour
         Controller = GetComponent<PlayerController>();
         Info = GetComponent<CharacterInfo>();
         Equipment = GetComponent<Equipment>();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

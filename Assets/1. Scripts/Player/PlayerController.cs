@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,11 +7,14 @@ public class PlayerController : MonoBehaviour
     [Header("Moving")]
     public float jumpForce;
     public float _baseMoveSpeed;
+    public float curMoveSpeed;
+    public float rayDistance;
+    public LayerMask groundLayerMask;
+    
     private Vector2 _moveInput;
     private Rigidbody _rigidbody;
     private Vector3 _direction;
     private float _dashSpeed;
-    public float curMoveSpeed;
     
     private bool _isGround;
     private int _isRun;
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        Jumped();
     }
 
     private void LateUpdate()
@@ -89,22 +94,39 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && _isGround)
+        if (context.started && isGround())
+        {
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+    
+    private bool isGround()
+    {
+        Ray[] jumpRays = new Ray[4]
+        {
+            new Ray(transform.position + (transform.forward / 7f), Vector3.down),
+            new Ray(transform.position + (-transform.forward / 7f), Vector3.down),
+            new Ray(transform.position + (transform.right / 7f),Vector3.down),
+            new Ray(transform.position + (-transform.right / 7f), Vector3.down)
+        };
+    
+        for (int i = 0; i < jumpRays.Length; i++)
+        {
+            if (Physics.Raycast(jumpRays[i], rayDistance, groundLayerMask))
+            {
+                return true;
+            }
+        }
+    
+        return false;
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void Jumped()
     {
-        if (other.gameObject.CompareTag("Ground"))
-            _isGround = true;
-        _animator.SetBool(_isJump, false);
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject.CompareTag("Ground"))
-            _isGround = false;
-        _animator.SetBool(_isJump, true);
+        if (isGround())
+            _animator.SetBool(_isJump, false);
+        else
+            _animator.SetBool(_isJump, true);
     }
 
     // 상호작용 키 (F)
@@ -130,7 +152,8 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GameManager.Instance.UIManager.SetArchitectUI();
+            Debug.Log("제작 메뉴");
+            // GameManager.Instance.UIManager.제작UI토글();
         }
     }
 
@@ -138,16 +161,35 @@ public class PlayerController : MonoBehaviour
     public void OnQuickSlot(InputAction.CallbackContext context)
     {
         int controlNum = int.Parse(context.control.name);
-        if (context.started && !GameManager.Instance.UIManager.IsUIActive)
-            GameManager.Instance.Inventory.SelectQuickslot(controlNum - 1);
+        if (context.started)
+            switch (controlNum)
+            {
+                case 1:
+                    Debug.Log("1번 슬롯 선택");
+                    break;
+                case 2:
+                    Debug.Log("2번 슬롯 선택");
+                    break;
+                case 3:
+                    Debug.Log("3번 슬롯 선택");
+                    break;
+                case 4:
+                    Debug.Log("4번 슬롯 선택");
+                    break;
+                case 5:
+                    Debug.Log("5번 슬롯 선택");
+                    break;
+            }
     }
 
     // 공격 (좌클릭)
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started && GameManager.Instance.Player.Equipment.IsEquip && !GameManager.Instance.UIManager.IsUIActive)
+        if (context.started)
         {
-            GameManager.Instance.Player.Equipment.Attack();
+            Debug.Log("공격!");
+            // 공격 애니메이션 실행
+            // _animator.SetTrigger("Attack");
         }
     }
 
