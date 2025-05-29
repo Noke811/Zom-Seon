@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerCondition : MonoBehaviour, IDamageable
+public class PlayerCondition : MonoBehaviour, IDamagable
 {
     public UICondition uiCondition;
     public PlayerController controller;
