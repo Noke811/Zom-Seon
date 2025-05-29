@@ -32,14 +32,16 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     {
         hunger.Subtract(hunger.passiveValue * Time.deltaTime);
         thirst.Subtract(thirst.passiveValue * Time.deltaTime);
+        
         if (hunger.curValue > 0f)
-            health.Add(health.passiveValue);
+            health.Add(health.passiveValue * Time.deltaTime);
         else
-            health.Subtract(hunger.passiveValue);
+            health.Subtract(hunger.passiveValue * Time.deltaTime);
+        
         if (thirst.curValue > 0f)
-            health.Add(health.passiveValue);
+            health.Add(health.passiveValue * Time.deltaTime);
         else
-            health.Subtract(thirst.passiveValue);
+            health.Subtract(thirst.passiveValue * Time.deltaTime);
     }
 
     private void UseStamina()
