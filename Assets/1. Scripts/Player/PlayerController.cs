@@ -139,35 +139,16 @@ public class PlayerController : MonoBehaviour
     public void OnQuickSlot(InputAction.CallbackContext context)
     {
         int controlNum = int.Parse(context.control.name);
-        if (context.started)
-            switch (controlNum)
-            {
-                case 1:
-                    Debug.Log("1번 슬롯 선택");
-                    break;
-                case 2:
-                    Debug.Log("2번 슬롯 선택");
-                    break;
-                case 3:
-                    Debug.Log("3번 슬롯 선택");
-                    break;
-                case 4:
-                    Debug.Log("4번 슬롯 선택");
-                    break;
-                case 5:
-                    Debug.Log("5번 슬롯 선택");
-                    break;
-            }
+        if (context.started && !GameManager.Instance.UIManager.IsUIActive)
+            GameManager.Instance.Inventory.SelectQuickslot(controlNum - 1);
     }
 
     // 공격 (좌클릭)
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && GameManager.Instance.Player.Equipment.IsEquip && !GameManager.Instance.UIManager.IsUIActive)
         {
-            Debug.Log("공격!");
-            // 공격 애니메이션 실행
-            // _animator.SetTrigger("Attack");
+            GameManager.Instance.Player.Equipment.Attack();
         }
     }
 

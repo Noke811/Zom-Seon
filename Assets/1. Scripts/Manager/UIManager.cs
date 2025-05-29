@@ -46,12 +46,14 @@ public class UIManager : MonoBehaviour
     public void SetInventoryUI()
     {
         inventoryUI.SetActive(!inventoryUI.activeSelf);
+        if(!inventoryUI.activeSelf) setQuickslotButton.HideButtons();
 
         ControlCursor(inventoryUI.activeSelf);
     }
     public void SetInventoryUI(bool show)
     {
         inventoryUI.SetActive(show);
+        if(!show) setQuickslotButton.HideButtons();
 
         ControlCursor(show);
     }
