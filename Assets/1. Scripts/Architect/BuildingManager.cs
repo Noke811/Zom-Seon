@@ -12,6 +12,8 @@ public class BuildingManager : MonoBehaviour
     public Material previewMaterial; // 배치 가능할 때의 Material
     public Material previewMaterialInvalid; // 배치 불가능할 때의 Material
 
+    public float buildableDistance = 10f;
+
     private Camera mainCamera;
     private ArchitectData selectedItem;
     private GameObject previewObject;
@@ -84,7 +86,7 @@ public class BuildingManager : MonoBehaviour
         if (previewObject == null) return;
         
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 5f, buildableLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, buildableDistance, buildableLayer))
         {
             previewObject.SetActive(true);
             currentPosition = hit.point;
@@ -95,6 +97,7 @@ public class BuildingManager : MonoBehaviour
         else
         {
             previewObject.SetActive(false);
+            canPlace = false;
         }
     }
 
