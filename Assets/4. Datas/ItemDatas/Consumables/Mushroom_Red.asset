@@ -25,10 +25,6 @@ MonoBehaviour:
     value: -5
     hasDuration: 0
     duration: 0
-  - type: 7
-    value: -5
-    hasDuration: 1
-    duration: 10
   - type: 2
     value: 10
     hasDuration: 0

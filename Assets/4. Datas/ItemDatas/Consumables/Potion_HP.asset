@@ -25,7 +25,3 @@ MonoBehaviour:
     value: 50
     hasDuration: 0
     duration: 0
-  - type: 1
-    value: 4
-    hasDuration: 1
-    duration: 5
