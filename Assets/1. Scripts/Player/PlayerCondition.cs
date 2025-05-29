@@ -13,6 +13,8 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     private void Awake()
     {
         controller = GetComponent<PlayerController>();
+        GameObject playerInfo = GameObject.Find("PlayerInfo");
+        uiCondition = playerInfo.GetComponent<UICondition>();
     }
 
     public void TakeDamage(int damage)
