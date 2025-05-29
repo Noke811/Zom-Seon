@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private bool _isGround;
     private int _isRun;
     private int _isJump;
+    public bool isDash;
 
     [Header("Looking")]
     public Transform cameraContainer;
@@ -174,8 +175,14 @@ public class PlayerController : MonoBehaviour
     public void OnDash(InputAction.CallbackContext context)
     {
         if (context.performed)
+        { 
             curMoveSpeed = _dashSpeed = (_baseMoveSpeed * 1.4f);
+            isDash = true;
+        }
         else if (context.canceled)
+        {
             curMoveSpeed = _baseMoveSpeed;
+            isDash = false;
+        }
     }   
 }
