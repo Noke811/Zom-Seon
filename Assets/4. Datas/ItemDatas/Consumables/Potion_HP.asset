@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: "HP \uD3EC\uC158"
   description: "\uB9C8\uC2DC\uBA74 \uCCB4\uB825\uC744 \uD68C\uBCF5\uD55C\uB2E4."
   type: 2
-  icon: {fileID: 21300000, guid: a7cae3b6182687240b839f430d8469dd, type: 3}
+  icon: {fileID: 21300000, guid: 9635689f78d8b34469b3d543c2d67613, type: 3}
   dropPrefab: {fileID: 4497440488380192135, guid: 0ddba7f4552c4c74fa3454221ee391f9, type: 3}
   canStack: 1
   maxAmount: 5
