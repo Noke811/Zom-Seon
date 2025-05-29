@@ -94,7 +94,18 @@ public class Inventory : MonoBehaviour
     public void DropItem()
     {
         Instantiate(slots[selectedIndex].Data.DropPrefab, dropPosition.position + dropPosition.forward, Quaternion.identity);
+
         slots[selectedIndex].DecreaseAmount(1);
+        if (slots[selectedIndex].IsEmpty) ReleaseQuickslot();
+    }
+
+    // 해당 아이템 먹기
+    public void EatItem()
+    {
+        // 아이템 효과 적용
+
+        slots[selectedIndex].DecreaseAmount(1);
+        if (slots[selectedIndex].IsEmpty) ReleaseQuickslot();
     }
 
     // 스왑 모드 활성화

@@ -42,7 +42,7 @@ public class ItemButton : ButtonHandler
                 break;
 
             case ItemButtonType.Eat:
-                // 소비 아이템 사용
+                GameManager.Instance.Inventory.EatItem();
                 break;
 
             case ItemButtonType.Quick:
