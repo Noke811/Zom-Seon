@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,11 +7,14 @@ public class PlayerController : MonoBehaviour
     [Header("Moving")]
     public float jumpForce;
     public float _baseMoveSpeed;
+    public float curMoveSpeed;
+    public float rayDistance;
+    public LayerMask groundLayerMask;
+    
     private Vector2 _moveInput;
     private Rigidbody _rigidbody;
     private Vector3 _direction;
     private float _dashSpeed;
-    public float curMoveSpeed;
     
     private bool _isGround;
     private int _isRun;
@@ -18,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool isDash;
 
     [Header("Looking")]
-    public Transform cameraContainer;
+    Transform cameraContainer;
     InteractableDetector interactableDetector;
     public float sensitive;
     private Vector2 _mouseDelta;
@@ -30,8 +34,8 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
-        cameraContainer = transform.Find("Camera Container");
-        interactableDetector = cameraContainer.GetComponent<InteractableDetector>();
+        cameraContainer = GetComponent<Player>().Head.transform;
+        interactableDetector = GetComponent<Player>().Head;
 
         _isRun = Animator.StringToHash("isRun");
         _isJump = Animator.StringToHash("isJump");
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        Jumped();
     }
 
     private void LateUpdate()
@@ -89,22 +94,39 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && _isGround)
+        if (context.started && isGround())
+        {
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+    
+    private bool isGround()
+    {
+        Ray[] jumpRays = new Ray[4]
+        {
+            new Ray(transform.position + (transform.forward / 7f), Vector3.down),
+            new Ray(transform.position + (-transform.forward / 7f), Vector3.down),
+            new Ray(transform.position + (transform.right / 7f),Vector3.down),
+            new Ray(transform.position + (-transform.right / 7f), Vector3.down)
+        };
+    
+        for (int i = 0; i < jumpRays.Length; i++)
+        {
+            if (Physics.Raycast(jumpRays[i], rayDistance, groundLayerMask))
+            {
+                return true;
+            }
+        }
+    
+        return false;
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void Jumped()
     {
-        if (other.gameObject.CompareTag("Ground"))
-            _isGround = true;
-        _animator.SetBool(_isJump, false);
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject.CompareTag("Ground"))
-            _isGround = false;
-        _animator.SetBool(_isJump, true);
+        if (isGround())
+            _animator.SetBool(_isJump, false);
+        else
+            _animator.SetBool(_isJump, true);
     }
 
     // 상호작용 키 (F)

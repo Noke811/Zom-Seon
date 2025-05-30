@@ -21,11 +21,7 @@ MonoBehaviour:
   canStack: 0
   maxAmount: 1
   buffs:
-  - type: 1
-    value: 2
-    hasDuration: 0
-    duration: 0
-  - type: 5
-    value: 5
+  - type: 6
+    value: 1
     hasDuration: 0
     duration: 0

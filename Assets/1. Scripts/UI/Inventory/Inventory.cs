@@ -223,6 +223,8 @@ public class Inventory : MonoBehaviour
     public void EquipItem()
     {
         GameManager.Instance.Player.Equipment.Equip(slots[selectedIndex].Data.Id);
+        // 장비 착용 시 스테이터스 오르는 로직 필요
+
         equippedIndex = selectedIndex;
         GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
     }
@@ -233,5 +235,48 @@ public class Inventory : MonoBehaviour
         GameManager.Instance.Player.Equipment.Unequip(slots[selectedIndex].Data.Id);
         equippedIndex = -1;
         GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
+    }
+
+    // 해당 아이템 ID를 가진 자원의 수량 반환
+    public int GetResourceAmount(int id)
+    {
+        int amount = 0;
+
+        for (int i = 0; i < inventoryCount; i++)
+        {
+            if (!slots[i].IsEmpty)
+            {
+                if (slots[i].Data.Id == id)
+                    amount += slots[i].Amount;
+            }
+        }
+
+        return amount;
+    }
+
+    // 제작할 때 필요한 자원 소비
+    public void CraftResource(int id, int amount)
+    {
+        int remain = amount;
+
+        for (int i = 0; i < inventoryCount; i++)
+        {
+            if (!slots[i].IsEmpty)
+            {
+                if (slots[i].Data.Id == id)
+                {
+                    if(remain > slots[i].Amount)
+                    {
+                        remain -= slots[i].Amount;
+                        slots[i].DecreaseAmount(slots[i].Amount);
+                    }
+                    else
+                    {
+                        slots[i].DecreaseAmount(remain);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

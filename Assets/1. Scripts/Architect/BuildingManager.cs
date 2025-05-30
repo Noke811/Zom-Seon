@@ -214,6 +214,8 @@ public class BuildingManager : MonoBehaviour
         if (HasMaterials())
         {
             ConsumeMaterials();
+            Vector3 spwanPos = GameManager.Instance.Player.Head.transform.position + GameManager.Instance.Player.Head.transform.forward;
+            Instantiate(selectedItem.itemPrefab, spwanPos, Quaternion.identity);
         }
         else
         {
@@ -224,13 +226,23 @@ public class BuildingManager : MonoBehaviour
 
     private bool HasMaterials()
     {
-        // TODO: 인벤토리 연동 필요
+        foreach(CraftingResource resource in selectedItem.craftingResources)
+        {
+            if (resource.amount > GameManager.Instance.Inventory.GetResourceAmount(resource.id))
+            {
+                return false;
+            }
+        }
         return true;
     }
 
     private void ConsumeMaterials()
     {
-        // TODO: 인벤토리 연동 필요
+        foreach (CraftingResource resource in selectedItem.craftingResources)
+        {
+            GameManager.Instance.Inventory.CraftResource(resource.id, resource.amount);
+        }
+        
         Debug.Log("Consume materials");
     }
 }

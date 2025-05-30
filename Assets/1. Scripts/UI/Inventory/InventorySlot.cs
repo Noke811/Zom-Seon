@@ -142,7 +142,7 @@ public class InventorySlot : MonoBehaviour
     {
         Amount -= _amount;
 
-        if(Amount == 0)
+        if(Amount <= 0)
         {
             ClearSlot();
         }

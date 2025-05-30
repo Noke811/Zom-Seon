@@ -5,9 +5,9 @@ public class Equipment : MonoBehaviour
 {
     [SerializeField] Transform pivot;
     Dictionary<int, GameObject> equipObject = new Dictionary<int, GameObject>();
-    GameObject curEquip;
+    public int CurID { get; private set; }
 
-    public bool IsEquip => curEquip != null;
+    public bool IsEquip => CurID != -1;
 
     private void Awake()
     {
@@ -18,37 +18,35 @@ public class Equipment : MonoBehaviour
             equip.SetActive(false);
         }
 
-        curEquip = null;
+        CurID = -1;
     }
 
+    // 장비 착용
     public void Equip(int id)
     {
         if (equipObject.ContainsKey(id))
         {
-            if (curEquip != null)
+            if (IsEquip)
             {
-                curEquip.SetActive(false);
+                equipObject[CurID].SetActive(false);
             }
 
             equipObject[id].SetActive(true);
-            curEquip = equipObject[id];
+            CurID = id;
         }
     }
 
+    // 장비 해제
     public void Unequip(int id)
     {
-        if (equipObject.ContainsKey(id))
-        {
-            if (curEquip == equipObject[id])
-            {
-                curEquip.SetActive(false);
-                curEquip = null;
-            }
-        }
+        if (!IsEquip || CurID != id) return;
+
+        equipObject[CurID].SetActive(false);
+        CurID = -1;
     }
 
     public void Attack()
     {
-        Debug.Log("공격!");   
+        GameManager.Instance.Player.Detector.AttackDamagables(GameManager.Instance.Player.Info.FinalAtk);
     }
 }

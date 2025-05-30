@@ -12,17 +12,17 @@ public enum ZombieState
 public class ZombieAI : MonoBehaviour
 {
     [Header("설정")]
-    public float wanderRadius = 10f;         // 배회 시 이동할 수 있는 최대 반경
-    public float detectRangeDay = 5f;        // 낮에 플레이어를 감지할 수 있는 거리
+    public float wanderRadius = 3f;         // 배회 시 이동할 수 있는 최대 반경
+    public float detectRangeDay = 3f;        // 낮에 플레이어를 감지할 수 있는 거리
     public float fieldOfView = 60f;          // 낮에 플레이어를 감지할 수 있는 시야각
-    public float attackRange = 2f;           // 공격 가능한 거리
+    public float attackRange = 1f;           // 공격 가능한 거리
     public float attackCooldown = 1f;        // 공격 간격 (초 단위)
     public int damage = 10;                  // 한 번의 공격으로 입히는 데미지량
     public float chaseKeepRange = 10f;       // 낮에 플레이어를 쫓다가 중단하는 거리
 
     [Header("참조")]
     public Transform player;                 // 추적 대상이 될 플레이어 Transform
-    public LayerMask fenceMask;              // Fence 오브젝트를 감지하기 위한 레이어 마스크
+    public LayerMask attackTargetMask;              // Fence 오브젝트를 감지하기 위한 레이어 마스크
 
     // 컴포넌트 및 상태 캐시
     private NavMeshAgent agent;              // 좀비의 경로 이동 처리용 NavMeshAgent
@@ -43,36 +43,30 @@ public class ZombieAI : MonoBehaviour
     private bool wasNight = false;           // 이전 프레임이 밤이었는지 여부
     private bool isNight => GameManager.Instance.DayCycle.IsNight; // 현재 밤 여부 (GameManager 통해 확인)
     
+    private ZombieStats stats;               // 좀비스텟
     
-    //컴포넌트 설정, 이동 속성 설정, 상태 초기화, 플레이어 찾기
-    private void Start()
+    private void Awake()
     {
-        // 좀비 이동 및 애니메이션 제어용 컴포넌트 참조
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-        
-        // 이동 성능 설정 (즉각 반응하도록 튜닝)
-        agent.acceleration = 30f;        // 빠르게 출발
-        agent.angularSpeed = 360f;       // 빠르게 회전
-        agent.stoppingDistance = 0.1f;   // 목적지에 가까워지면 정확히 멈춤
-        agent.autoBraking = true;        // 멈출 때 천천히 제동하지 않고 즉시 정지
-        agent.stoppingDistance = 0.8f;   // 접근거리
-        
-        // 시작 상태를 '배회'로 설정
-        state = ZombieState.Wandering;
-
-        // 플레이어 참조가 비어 있을 경우 자동 탐색
-        if (player == null)
-        {
-            GameObject target = GameObject.FindWithTag("Player");
-            if (target != null)
-                player = target.transform;
-        }
-
-        // 첫 배회 목적지 설정 (랜덤 이동 시작)
-        ScheduleNextWander();
+        agent = GetComponent<NavMeshAgent>();   // 경로 탐색 및 이동 제어
+        animator = GetComponent<Animator>();    // 애니메이션 제어
+        stats = GetComponent<ZombieStats>();    // 스탯 정보
     }
 
+    private void Start()
+    {
+        // 플레이어가 설정되어 있지 않다면 태그로 찾아서 자동 할당
+        if (player == null)
+        {
+            GameObject found = GameObject.FindWithTag("Player");
+            if (found != null) player = found.transform;
+        }
+
+        // 첫 프레임에서 밤/낮 변화 상태를 초기화하고 감지를 강제로 수행
+        wasNight = !isNight;               // 이전 상태를 현재와 반대로 설정해 Update에서 감지 로직 작동하게 유도
+        DetectPlayerOrFence();             // 감지 시스템 최초 1회 작동
+        OnResurrected();                   // 좀비 부활 초기화 설정
+    }
+   
     //상태에 따라 행동 수행 + 애니메이션 + 감지 처리
     private void Update()
     {
@@ -103,10 +97,11 @@ public class ZombieAI : MonoBehaviour
             case ZombieState.Chasing:
                 ChaseUpdate();            // 플레이어 추적 및 사거리 확인
                 DetectPlayerOrFence();    // 감지 갱신 (추적 중에도 재판단)
+                TryAttackTargets();
                 break;
 
             case ZombieState.AttackingFence:
-                FenceAttackUpdate();      // Fence 공격 로직 실행
+                TryAttackTargets();      // Fence 공격 로직 실행
                 DetectPlayerOrFence();    // Fence 공격 중에도 플레이어 추적 가능해지면 전환
                 break;
         }
@@ -181,77 +176,87 @@ public class ZombieAI : MonoBehaviour
         agent.SetDestination(player.position);
     }
     
-    // Fence를 공격하는 상태에서 실행되는 로직
-    void FenceAttackUpdate()
+    // 전방의 공격 가능 대상을 감지하고 공격 시도
+    void TryAttackTargets()
     {
-        // 마지막 공격 이후 쿨타임이 지나지 않았다면 공격하지 않음
+        // 마지막 공격 이후 쿨타임이 지났는지 확인
         if (Time.time - lastAttackTime > attackCooldown)
         {
             lastAttackTime = Time.time;
 
-            // 좀비 전방 1.5, 반경 1 내에 있는 Fence를 감지
-            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * 1.5f, 1f, fenceMask);
-        
+            // 좀비 전방 1.5 유닛 지점, 반경 1 내의 충돌체 탐색 (Layer 제한 없음)
+            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward * attackRange, attackRange, attackTargetMask);
             foreach (var hit in hits)
             {
-                // 감지된 오브젝트에 SimpleHealth 컴포넌트가 있다면 데미지 적용
-                if (hit.TryGetComponent(out SimpleHealth health))
+                // 감지된 오브젝트 데미지 적용
+                if (hit.TryGetComponent(out IDamagable target))
                 {
-                    health.TakeDamage(damage);
-                    Debug.Log("Fence 공격!");
-                    // TODO: 공격 이펙트, 애니메이션 연동 가능
+                    target.TakeDamage(damage);
+                    Debug.Log($"공격 성공: {hit.name}에게 {damage} 피해");
                 }
             }
         }
     }
 
-    // 배회(Wandering) 상태에서의 이동 및 대기 처리
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + transform.forward * attackRange, attackRange);
+    }
+
+    // 배회 상태에서의 이동 및 대기 처리
     void WanderUpdate()
     {
-        // 현재 목적지까지 도착했고 대기 상태가 아닐 경우 → 대기 시작
-        if (!agent.pathPending && agent.remainingDistance <= 0.5f && !isWaiting)
+        // 목적지에 도착했고 아직 대기 중이 아니라면
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance && !isWaiting)
         {
-            isWaiting = true;                                 // 대기 상태 진입
-            wanderDelay = Random.Range(1f, 2f);               // 1~2초 사이 대기 시간 설정
-            lastWanderTime = Time.time;                       // 대기 시작 시각 저장
-            agent.isStopped = true;                           // 이동 중단
+            isWaiting = true;                              // 대기 상태 진입
+            wanderDelay = Random.Range(1f, 2f);            // 다음 이동까지의 대기 시간 랜덤 설정
+            lastWanderTime = Time.time;                    // 현재 시각 기록
+            agent.isStopped = true;                        // 이동 중단
+            //Debug.Log("[WanderUpdate] 도착 + 대기 시작");
         }
 
-        // 대기 시간이 모두 지난 경우 → 다음 배회 지점 설정
+        // 대기 상태 중이고, 대기 시간이 지났으면
         if (isWaiting && Time.time - lastWanderTime >= wanderDelay)
         {
-            isWaiting = false;                                // 대기 종료
-            SetNewWanderDestination();                        // 새로운 랜덤 목적지 설정
+            isWaiting = false;                             // 대기 상태 해제
+            SetNewWanderDestination();                     // 다음 배회 목적지 설정
+            //Debug.Log("[WanderUpdate] 대기 끝 → 다음 지점으로 이동");
         }
     }
 
-    // 배회 상태일 때 다음 이동까지의 대기 시간과 목적지를 설정함
-    void ScheduleNextWander()
-    {
-        wanderDelay = Random.Range(1f, 2f);        // 대기 시간 1~2초 랜덤 설정
-        lastWanderTime = Time.time;                // 현재 시간을 기준으로 대기 시작
-        SetNewWanderDestination();                 // 다음 이동 지점 설정
-    }
 
-    // NavMesh 위에서 배회 목적지를 무작위로 지정하여 이동 시작
+    // 배회상태일 때의 목적지를 무작위로 설정하고 해당 위치로 이동 시작
     void SetNewWanderDestination()
     {
-        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius); // 반경 내 랜덤 위치
-        agent.SetDestination(newPos);          // NavMeshAgent에 목적지 설정
-        agent.isStopped = false;               // 이동 재개
+        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius); // 현재 위치 기준으로 반경 내 무작위 위치 선택
+
+        // NavMeshAgent가 비활성화된 경우 재활성화하고 기본 설정 보장
+        if (!agent.enabled) agent.enabled = true;
+        agent.updatePosition = true;       // 위치 자동 업데이트 허용
+        agent.updateRotation = true;       // 회전 자동 업데이트 허용
+
+        agent.SetDestination(newPos);      // 이동할 위치 설정
+        agent.isStopped = false;           // 이동 상태 재개
     }
 
-    // 좀비 상태를 Wandering으로 전환하고 초기 배회 시작
+    // 좀비 상태를 배회로 설정하고, 즉시 다음 목적지를 지정하여 이동 시작
     void SetWandering()
     {
-        state = ZombieState.Wandering;         // 상태 전환
-        ScheduleNextWander();                  // 다음 배회 설정 (이동 지점 + 대기 시간)
+        state = ZombieState.Wandering;         // 상태를 배회로 설정
+        isWaiting = false;                     // 대기 상태 초기화
+        wanderDelay = Random.Range(1f, 2f);    // 다음 대기까지의 랜덤 지연 시간 설정
+        lastWanderTime = Time.time;            // 현재 시간 저장
+
+        SetNewWanderDestination();             // 즉시 새로운 배회 목적지 설정 및 이동 시작
     }
 
     // 주변에서 가장 가까운 Fence를 찾아 해당 위치로 이동, 공격 상태로 전환
     void FindNearestFence()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, 50f, fenceMask);
+        Collider[] hits = Physics.OverlapSphere
+            (transform.position + transform.forward * 1.5f, 1f, attackTargetMask);
         Debug.Log("Fence 감지 시도, 감지된 개수: " + hits.Length);
 
         Transform nearest = null;
@@ -296,7 +301,7 @@ public class ZombieAI : MonoBehaviour
             if (NavMesh.SamplePosition(randDir, out NavMeshHit navHit, dist, NavMesh.AllAreas))
             {
                 // origin에서 너무 가까운 지점은 제외 (2.5f 이상 떨어져야 함)
-                if (Vector3.Distance(origin, navHit.position) > 2.5f)
+                if (Vector3.Distance(origin, navHit.position) > 0.5f)
                     return navHit.position; // 유효한 위치 반환
             }
         }
@@ -305,5 +310,30 @@ public class ZombieAI : MonoBehaviour
         return origin;
     }
     
-    
+    // 좀비가 다시 활성화될 때 호출됨. 상태 및 이동 정보 초기화
+    public void OnResurrected()
+    {
+        // 컴포넌트 재캐싱 (null일 경우만)
+        if (stats == null) stats = GetComponent<ZombieStats>();
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
+        if (animator == null) animator = GetComponent<Animator>();
+
+        // NavMeshAgent 기본 설정
+        agent.speed = stats.moveSpeed;
+        agent.acceleration = 30f;
+        agent.angularSpeed = 360f;
+        agent.stoppingDistance = 0.8f;
+        agent.autoBraking = true;
+
+        // 상태 초기화 (배회 상태로 시작)
+        wasNight = !isNight;
+        state = ZombieState.Wandering;
+        isWaiting = false;
+
+        // 배회 관련 타이머 초기화 및 즉시 시작
+        wanderDelay = Random.Range(1f, 2f);
+        lastWanderTime = Time.time;
+        SetNewWanderDestination();
+    }
+
 }

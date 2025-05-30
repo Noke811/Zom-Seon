@@ -1,11 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
-
-public interface IDamageable
-{
-    void TakeDamage(int damage);
-}
 
 public class Condition : MonoBehaviour
 {

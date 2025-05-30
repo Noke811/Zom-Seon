@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerCondition : MonoBehaviour, IDamageable
+public class PlayerCondition : MonoBehaviour, IDamagable
 {
     public UICondition uiCondition;
     public PlayerController controller;
@@ -32,14 +32,13 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     {
         hunger.Subtract(hunger.passiveValue * Time.deltaTime);
         thirst.Subtract(thirst.passiveValue * Time.deltaTime);
-        if (hunger.curValue > 0f)
-            health.Add(health.passiveValue);
+        
+        if(hunger.curValue > 0 && thirst.curValue > 0)
+            health.Add(2f * Time.deltaTime);
+        else if(hunger.curValue <= 0 && thirst.curValue <= 0)
+            health.Subtract(2f * Time.deltaTime);
         else
-            health.Subtract(hunger.passiveValue);
-        if (thirst.curValue > 0f)
-            health.Add(health.passiveValue);
-        else
-            health.Subtract(thirst.passiveValue);
+            health.Subtract(1f * Time.deltaTime);
     }
 
     private void UseStamina()
