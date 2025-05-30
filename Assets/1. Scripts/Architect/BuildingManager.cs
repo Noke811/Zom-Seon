@@ -163,8 +163,15 @@ public class BuildingManager : MonoBehaviour
     }
 
     private void TryPlaceObject()
-    {
+    {        
         // 실제 건축물을 배치하는 로직
+        if (!HasMaterials())
+        {
+            Debug.Log("Not enough materials");
+            // UI제공 
+            return;
+        }
+
         if (!canPlace)
         {
             Debug.Log("Can't place object");
@@ -173,6 +180,7 @@ public class BuildingManager : MonoBehaviour
         
         GameObject newObject = Instantiate(selectedItem.itemPrefab, currentPosition, previewObject.transform.rotation);
         newObject.layer = LayerMask.NameToLayer("Foundation"); //TODO: 예시 레이어. 이후 변경 필요
+        ConsumeMaterials();
         Debug.Log(selectedItem.itemName + "건설 완료");
         CancelPlacement();
     }
