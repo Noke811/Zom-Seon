@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     public bool isDash;
 
     [Header("Looking")]
-    public Transform cameraContainer;
+    Transform cameraContainer;
     InteractableDetector interactableDetector;
     public float sensitive;
     private Vector2 _mouseDelta;
@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
-        interactableDetector = cameraContainer.GetComponent<InteractableDetector>();
+        cameraContainer = GetComponent<Player>().Head.transform;
+        interactableDetector = GetComponent<Player>().Head;
 
         _isRun = Animator.StringToHash("isRun");
         _isJump = Animator.StringToHash("isJump");
@@ -156,8 +157,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            Debug.Log("제작 메뉴");
-            // GameManager.Instance.UIManager.제작UI토글();
+            GameManager.Instance.UIManager.SetArchitectUI();
         }
     }
 

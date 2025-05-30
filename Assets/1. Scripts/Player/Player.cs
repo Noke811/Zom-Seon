@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public Inventory Inventory { get; private set; }
     public CharacterStat Stat { get; private set; }
     public Equipment Equipment { get; private set; }
+    public InteractableDetector Head { get; private set; }
     public DamagableDetector Detector { get; private set; }
 
     private void Awake()
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
         Inventory = GetComponent<Inventory>();
         Stat = GetComponent<CharacterStat>();
         Equipment = GetComponent<Equipment>();
-        Detector = GetComponentInChildren<DamagableDetector>();
+        Head = GetComponentInChildren<InteractableDetector>();
+        Detector = Head.GetComponentInChildren<DamagableDetector>();
     }
 }

@@ -257,4 +257,47 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+
+    // 해당 아이템 ID를 가진 자원의 수량 반환
+    public int GetResourceAmount(int id)
+    {
+        int amount = 0;
+
+        for (int i = 0; i < inventoryCount; i++)
+        {
+            if (!slots[i].IsEmpty)
+            {
+                if (slots[i].Data.Id == id)
+                    amount += slots[i].Amount;
+            }
+        }
+
+        return amount;
+    }
+
+    // 제작할 때 필요한 자원 소비
+    public void CraftResource(int id, int amount)
+    {
+        int remain = amount;
+
+        for (int i = 0; i < inventoryCount; i++)
+        {
+            if (!slots[i].IsEmpty)
+            {
+                if (slots[i].Data.Id == id)
+                {
+                    if(remain > slots[i].Amount)
+                    {
+                        remain -= slots[i].Amount;
+                        slots[i].DecreaseAmount(slots[i].Amount);
+                    }
+                    else
+                    {
+                        slots[i].DecreaseAmount(remain);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 }

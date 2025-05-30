@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class CraftingResource
+{
+    public int id;
+    public int amount;
+}
+
 [CreateAssetMenu(fileName = "Architect", menuName = "new Architect")]
 public class ArchitectData : ScriptableObject
 {
@@ -13,4 +20,5 @@ public class ArchitectData : ScriptableObject
     public bool isPlaceable;
     public bool isTool;
     public Material originalMaterial;
+    public CraftingResource[] craftingResources;
 }

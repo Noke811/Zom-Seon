@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61df0ff578d01aa48b45daec92d374f2, type: 3}
+  m_Name: Rock
+  m_EditorClassIdentifier: 
+  itemName: Rock
+  itemSprite: {fileID: 21300000, guid: 4a65b6546258a0f44990dffe76e36f7b, type: 3}
+  itemPrefab: {fileID: 2645937128089018681, guid: 76d4582d6573c5145bad8e9c9773ce09, type: 3}
+  itemPreviewPrefab: {fileID: 0}
+  isPlaceable: 0
+  isTool: 1
+  originalMaterial: {fileID: 0}
+  craftingResources:
+  - id: 102
+    amount: 10

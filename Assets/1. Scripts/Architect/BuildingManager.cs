@@ -163,8 +163,15 @@ public class BuildingManager : MonoBehaviour
     }
 
     private void TryPlaceObject()
-    {
+    {        
         // 실제 건축물을 배치하는 로직
+        if (!HasMaterials())
+        {
+            Debug.Log("Not enough materials");
+            // UI제공 
+            return;
+        }
+
         if (!canPlace)
         {
             Debug.Log("Can't place object");
@@ -173,6 +180,7 @@ public class BuildingManager : MonoBehaviour
         
         GameObject newObject = Instantiate(selectedItem.itemPrefab, currentPosition, previewObject.transform.rotation);
         newObject.layer = LayerMask.NameToLayer("Foundation"); //TODO: 예시 레이어. 이후 변경 필요
+        ConsumeMaterials();
         Debug.Log(selectedItem.itemName + "건설 완료");
         CancelPlacement();
     }
@@ -214,6 +222,8 @@ public class BuildingManager : MonoBehaviour
         if (HasMaterials())
         {
             ConsumeMaterials();
+            Vector3 spwanPos = GameManager.Instance.Player.Head.transform.position + GameManager.Instance.Player.Head.transform.forward;
+            Instantiate(selectedItem.itemPrefab, spwanPos, Quaternion.identity);
         }
         else
         {
@@ -224,13 +234,23 @@ public class BuildingManager : MonoBehaviour
 
     private bool HasMaterials()
     {
-        // TODO: 인벤토리 연동 필요
+        foreach(CraftingResource resource in selectedItem.craftingResources)
+        {
+            if (resource.amount > GameManager.Instance.Inventory.GetResourceAmount(resource.id))
+            {
+                return false;
+            }
+        }
         return true;
     }
 
     private void ConsumeMaterials()
     {
-        // TODO: 인벤토리 연동 필요
+        foreach (CraftingResource resource in selectedItem.craftingResources)
+        {
+            GameManager.Instance.Inventory.CraftResource(resource.id, resource.amount);
+        }
+        
         Debug.Log("Consume materials");
     }
 }
