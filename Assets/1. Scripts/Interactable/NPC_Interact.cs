@@ -32,6 +32,9 @@ public class NPC_Interact : MonoBehaviour, IInteractable
     {
         if (!isTalking)
         {
+            // 걷기사운드 강제종료
+            SoundManager.Instance.StopLoopSFX();
+            
             ai.StopMoving();
             FacePlayer(Camera.main.transform);
 
