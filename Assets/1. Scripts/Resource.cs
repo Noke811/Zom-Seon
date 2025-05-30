@@ -3,8 +3,8 @@ using UnityEngine;
 public class Resource : MonoBehaviour, IDamagable
 {
     [Header("Resource")]
-    [SerializeField] GameObject baseResource;
     [SerializeField] GameObject reamainResource;
+    Renderer baseRenderer;
     Collider baseCollider;
     [SerializeField] int[] equipmentId;
     [SerializeField] int maxAmount;
@@ -21,6 +21,7 @@ public class Resource : MonoBehaviour, IDamagable
 
     private void Awake()
     {
+        baseRenderer = GetComponent<Renderer>();
         baseCollider = GetComponent<Collider>();
 
         Init();
@@ -41,7 +42,7 @@ public class Resource : MonoBehaviour, IDamagable
     {
         remain = maxAmount;
 
-        baseResource.SetActive(true);
+        baseRenderer.enabled = true;
         baseCollider.enabled = true;
 
         reamainResource.SetActive(false);
@@ -66,7 +67,7 @@ public class Resource : MonoBehaviour, IDamagable
 
         if(!isRemain)
         {
-            baseResource.SetActive(false);
+            baseRenderer.enabled = false;
             baseCollider.enabled = false;
 
             reamainResource.SetActive(true);
