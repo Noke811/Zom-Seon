@@ -15,8 +15,8 @@ public class StartUI : MonoBehaviour, IBaseUI
     {
         startBtn.onClick.AddListener(OnClickGameStart);
         exitBtn.onClick.AddListener(OnClickGameExit);
-        //optionBtn.onClick.AddListener(OnClickOption);
-        //closeSoundBtn.onClick.AddListener(OnClickCloseSoundUI);
+        optionBtn.onClick.AddListener(OnClickOption);
+        closeSoundBtn.onClick.AddListener(OnClickCloseSoundUI);
     }
 
     // 버튼 클릭 시 게임 시작

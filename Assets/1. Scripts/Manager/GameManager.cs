@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour
     public DayAndNight DayCycle => dayCycle;
     [SerializeField] ZombieSpawner spawner;
 
+    [Header("Initial Item")]
+    [SerializeField] ItemData axe;
+    [SerializeField] ItemData pickaxe;
+
     private void Awake()
     {
         if(Instance == null)
@@ -45,7 +49,11 @@ public class GameManager : MonoBehaviour
     {
         uiManager.ChangeUIState(UIState.Playing);
         inventory.Init();
+        dayCycle.Init();
         Player.Condition.OnRevive();
+
+        inventory.AddInventory(axe, 1);
+        inventory.AddInventory(pickaxe, 1);
 
         IsPlaying = true;
     }

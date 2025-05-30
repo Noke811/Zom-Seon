@@ -385,7 +385,7 @@ MonoBehaviour:
   wanderRadius: 5
   detectRangeDay: 5
   fieldOfView: 60
-  attackRange: 1
+  attackRange: 0.4
   attackCooldown: 0.8
   damage: 10
   chaseKeepRange: 10
