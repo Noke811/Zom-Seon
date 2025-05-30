@@ -123,7 +123,7 @@ public class Inventory : MonoBehaviour
     public void ActiveSwapMode()
     {
         IsSwapMode = true;
-        GameManager.Instance.UIManager.ItemButton.HideButtons();
+        GameManager.Instance.UIManager.PlayingUI.ItemButton.HideButtons();
     }
 
     // 슬롯 버튼을 눌렀을 때 인덱스 변경
@@ -157,11 +157,11 @@ public class Inventory : MonoBehaviour
 
         if(selectedIndex == -1 || slots[selectedIndex].IsEmpty)
         {
-            GameManager.Instance.UIManager.ItemButton.HideButtons();
+            GameManager.Instance.UIManager.PlayingUI.ItemButton.HideButtons();
         }
         else
         {
-            GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
+            GameManager.Instance.UIManager.PlayingUI.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
         }
     }
 
@@ -240,7 +240,7 @@ public class Inventory : MonoBehaviour
         }
 
         equippedIndex = selectedIndex;
-        GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
+        GameManager.Instance.UIManager.PlayingUI.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
     }
 
     // 장비 해제하기
@@ -248,7 +248,7 @@ public class Inventory : MonoBehaviour
     {
         GameManager.Instance.Player.Equipment.Unequip(slots[selectedIndex].Data.Id);
         equippedIndex = -1;
-        GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
+        
         if(slots[selectedIndex].Data.Type == ItemType.Equipable)
         {
             foreach (Buff buff in slots[selectedIndex].Data.Buffs)
@@ -256,6 +256,7 @@ public class Inventory : MonoBehaviour
                 GameManager.Instance.Player.Stat.Subtract(buff.Type);
             }
         }
+        GameManager.Instance.UIManager.PlayingUI.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
     }
 
     // 해당 아이템 ID를 가진 자원의 수량 반환

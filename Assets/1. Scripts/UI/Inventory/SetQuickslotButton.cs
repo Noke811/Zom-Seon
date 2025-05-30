@@ -10,6 +10,6 @@ public class SetQuickslotButton : ButtonHandler
         {
             GameManager.Instance.Inventory.ReleaseQuickslot();
         }
-        GameManager.Instance.UIManager.ItemButton.DisplayItemButtons();
+        GameManager.Instance.UIManager.PlayingUI.ItemButton.DisplayItemButtons();
     }
 }

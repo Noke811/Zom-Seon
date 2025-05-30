@@ -28,14 +28,27 @@ public class ZombieSpawner : MonoBehaviour
     // 현재 활성화된 좀비 추적용 리스트
     private List<GameObject> activeZombies = new List<GameObject>();
 
+    private float lastSpawnTime;
+    
     void Start()
     {
         // 풀 초기화
         InitPool(zombiePrefab, zombiePool);
         InitPool(zombie2Prefab, zombie2Pool);
 
-        // 주기적으로 좀비 생성
-        InvokeRepeating(nameof(SpawnZombies), 2f, spawnInterval);
+        lastSpawnTime = Time.time;
+    }
+
+    private void Update()
+    {
+        if (!GameManager.Instance.IsPlaying) return;
+
+        // sapwnInterval마다 좀비 생성
+        if(Time.time - lastSpawnTime > spawnInterval)
+        {
+            lastSpawnTime = Time.time;
+            SpawnZombies();
+        }
     }
 
     // 오브젝트 풀에 미리 좀비 생성하여 넣기

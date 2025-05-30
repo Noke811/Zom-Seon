@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerCondition : MonoBehaviour, IDamagable
 {
-    public UICondition uiCondition;
+    private UICondition uiCondition;
 
     Condition health { get { return uiCondition.health; } }
     Condition stamina { get { return uiCondition.stamina; } }
@@ -11,8 +11,7 @@ public class PlayerCondition : MonoBehaviour, IDamagable
 
     private void Awake()
     {
-        GameObject playerInfo = GameObject.Find("PlayerInfo");
-        uiCondition = playerInfo.GetComponent<UICondition>();
+        uiCondition = GameManager.Instance.UIManager.PlayingUI.UICondition;
     }
 
     public void TakeDamage(int damage)
@@ -22,6 +21,8 @@ public class PlayerCondition : MonoBehaviour, IDamagable
 
     private void Update()
     {
+        if (!GameManager.Instance.IsPlaying) return;
+
         PassiveUpdate();
         DashStamina();
     }
