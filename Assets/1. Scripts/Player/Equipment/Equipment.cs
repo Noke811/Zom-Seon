@@ -45,8 +45,10 @@ public class Equipment : MonoBehaviour
         CurID = -1;
     }
 
+    // 공격
     public void Attack()
     {
-        GameManager.Instance.Player.Detector.AttackDamagables(GameManager.Instance.Player.Info.FinalAtk);
+        if (IsEquip)
+            GameManager.Instance.Player.Detector.AttackDamagables(GameManager.Instance.Player.Info.FinalAtk);
     }
 }

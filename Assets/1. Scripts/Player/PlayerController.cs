@@ -29,7 +29,9 @@ public class PlayerController : MonoBehaviour
     private float _camCurXRot;
 
     private Animator _animator;
-    
+
+    private bool cantMove => !GameManager.Instance.IsPlaying || GameManager.Instance.UIManager.PlayingUI.IsUIActive;
+
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -45,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (GameManager.Instance.UIManager.IsUIActive) return;
+        if (cantMove) return;
 
         Move();
         Jumped();
@@ -53,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (GameManager.Instance.UIManager.IsUIActive) return;
+        if (cantMove) return;
 
         Look();
     }
@@ -135,7 +137,9 @@ public class PlayerController : MonoBehaviour
     // 상호작용 키 (F)
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.started && !GameManager.Instance.UIManager.IsUIActive)
+        if (cantMove) return;
+
+        if (context.started)
         {
             interactableDetector.Interaction();
         }
@@ -144,33 +148,47 @@ public class PlayerController : MonoBehaviour
     // 인벤토리 키 (I)
     public void OnInventory(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.IsPlaying) return;
+
         if (context.started)
         {
-            GameManager.Instance.UIManager.ChangePlayingUIState(PlayingUIState.Inventory);
+            if (GameManager.Instance.UIManager.PlayingUI.PlayingUIState == PlayingUIState.Inventory)
+                GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.None);
+            else
+                GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.Inventory);
         }
     }
 
     // 제작 메뉴 (Tab)
     public void OnCraft(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.IsPlaying) return;
+
         if (context.started)
         {
-            GameManager.Instance.UIManager.ChangePlayingUIState(PlayingUIState.Craft);
+            if (GameManager.Instance.UIManager.PlayingUI.PlayingUIState == PlayingUIState.Craft)
+                GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.None);
+            else
+                GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.Craft);
         }
     }
 
     // 퀵슬롯 (1 ~ 5)
     public void OnQuickSlot(InputAction.CallbackContext context)
     {
+        if (cantMove) return;
+
         int controlNum = int.Parse(context.control.name);
-        if (context.started && !GameManager.Instance.UIManager.IsUIActive)
+        if (context.started)
             GameManager.Instance.Inventory.SelectQuickslot(controlNum - 1);
     }
 
     // 공격 (좌클릭)
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started && GameManager.Instance.Player.Equipment.IsEquip && !GameManager.Instance.UIManager.IsUIActive)
+        if (cantMove) return;
+
+        if (context.started)
         {
             GameManager.Instance.Player.Equipment.Attack();
         }
@@ -179,6 +197,8 @@ public class PlayerController : MonoBehaviour
     // 달리기 (쉬프트)
     public void OnDash(InputAction.CallbackContext context)
     {
+        if (cantMove) return;
+
         if (context.performed)
         { 
             curMoveSpeed = _dashSpeed = (_baseMoveSpeed * 1.4f);

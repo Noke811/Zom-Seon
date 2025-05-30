@@ -39,7 +39,7 @@ public class InteractableDetector : MonoBehaviour
     {
         curInteractable = _interactable;
 
-        GameManager.Instance.UIManager.SetInteractableInfo(curInteractable);
+        GameManager.Instance.UIManager.PlayingUI.SetInteractableInfo(curInteractable);
     }
 
     // 상호작용 키를 눌렀을 때 실행

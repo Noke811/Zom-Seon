@@ -25,7 +25,7 @@ public class ItemButton : ButtonHandler
         buttons[(int)ItemButtonType.Move].gameObject.SetActive(true);
         buttons[(int)ItemButtonType.Drop].gameObject.SetActive(true);
 
-        GameManager.Instance.UIManager.SetQuickslotButton.HideButtons();
+        GameManager.Instance.UIManager.PlayingUI.SetQuickslotButton.HideButtons();
     }
 
     // 해당 버튼 클릭했을 때 실행
@@ -47,7 +47,7 @@ public class ItemButton : ButtonHandler
 
             case ItemButtonType.Quick:
                 HideButtons();
-                GameManager.Instance.UIManager.SetQuickslotButton.ShowButtons();
+                GameManager.Instance.UIManager.PlayingUI.SetQuickslotButton.ShowButtons();
                 break;
 
             case ItemButtonType.Move:

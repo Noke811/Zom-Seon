@@ -86,7 +86,7 @@ public class InventorySlot : MonoBehaviour
         UpdateAmountText();
         UpdateQuickNumText();
 
-        GameManager.Instance.UIManager.ItemButton.HideButtons();
+        GameManager.Instance.UIManager.PlayingUI.ItemButton.HideButtons();
     }
 
     // 해당 슬롯에 더 저장할 수 있는지 확인
