@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ground_riverCross
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ca8fd4757152ce84dbfd14d101f16eaf, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
