@@ -49,6 +49,6 @@ public class Equipment : MonoBehaviour
     public void Attack()
     {
         if (IsEquip)
-            GameManager.Instance.Player.Detector.AttackDamagables(GameManager.Instance.Player.Info.FinalAtk);
+            GameManager.Instance.Player.Detector.AttackDamagables(GameManager.Instance.Player.Stat.FinalAtk);
     }
 }

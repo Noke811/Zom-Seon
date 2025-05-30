@@ -31,10 +31,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Attack")]
     public float attackCooltime;
-
     private float _attackNextCool;
-    
-    private Animator _animator;
 
     private bool cantMove => !GameManager.Instance.IsPlaying || GameManager.Instance.UIManager.PlayingUI.IsUIActive;
 

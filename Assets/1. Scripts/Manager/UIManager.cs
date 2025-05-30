@@ -34,19 +34,4 @@ public class UIManager : MonoBehaviour
     {
         Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
     }
-    
-    public void SetDialogueUI(bool show, string dialogue = "")
-    {
-        dialoguePanel.SetActive(show);
-
-        if (show && !string.IsNullOrEmpty(dialogue))
-            dialogueText.text = "";
-
-        ControlCursor(show); 
-    }
-    
-    public Text GetDialogueText()
-    {
-        return dialogueText;
-    }
 }

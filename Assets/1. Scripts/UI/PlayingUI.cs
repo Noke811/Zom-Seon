@@ -78,10 +78,19 @@ public class PlayingUI : MonoBehaviour, IBaseUI
     }
 
     // 대화창 띄우기
-    public void DisplayConversationUI(string dialogue)
+    public void SetDialogueUI(bool show, string dialogue = "")
     {
-        conversationText.text = dialogue;
-        conversationPanel.SetActive(true);
+        conversationPanel.SetActive(show);
+
+        if (show && !string.IsNullOrEmpty(dialogue))
+            conversationText.text = "";
+
+        GameManager.Instance.UIManager.ControlCursor(show);
+    }
+
+    public Text GetDialogueText()
+    {
+        return conversationText;
     }
 
     // 인벤토리 UI 띄우기 / 숨기기
