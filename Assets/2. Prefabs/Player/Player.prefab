@@ -1896,6 +1896,10 @@ MonoBehaviour:
   jumpForce: 300
   _baseMoveSpeed: 2
   curMoveSpeed: 0
+  rayDistance: 0.01
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   isDash: 0
   cameraContainer: {fileID: 6239260974648497615}
   sensitive: 0.1

@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private bool isGround()
+    public bool isGround()
     {
         Ray[] jumpRays = new Ray[4]
         {
@@ -167,7 +167,8 @@ public class PlayerController : MonoBehaviour
     // 공격 (좌클릭)
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started && GameManager.Instance.Player.Equipment.IsEquip && !GameManager.Instance.UIManager.IsUIActive)
+        if (context.started && GameManager.Instance.Player.Equipment.IsEquip &&
+            !GameManager.Instance.UIManager.IsUIActive)
         {
             GameManager.Instance.Player.Equipment.Attack();
         }

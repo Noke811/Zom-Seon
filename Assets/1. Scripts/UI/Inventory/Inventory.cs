@@ -110,11 +110,15 @@ public class Inventory : MonoBehaviour
     public void EatItem()
     {
         // 아이템 효과 적용
-
+        foreach (Buff buff in slots[selectedIndex].Data.Buffs)
+        {
+            GameManager.Instance.Player.Condition.Eat(buff.Type, buff.Value);
+        }
+        
         slots[selectedIndex].DecreaseAmount(1);
         if (slots[selectedIndex].IsEmpty) ReleaseQuickslot();
     }
-
+    
     // 스왑 모드 활성화
     public void ActiveSwapMode()
     {
