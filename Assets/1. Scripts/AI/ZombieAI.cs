@@ -70,6 +70,11 @@ public class ZombieAI : MonoBehaviour
     //상태에 따라 행동 수행 + 애니메이션 + 감지 처리
     private void Update()
     {
+        if (!GameManager.Instance.IsPlaying)
+        {
+            agent.isStopped = true;
+            return;
+        }
 
         // 이동 여부 → 애니메이션 제어
         bool isMoving = agent.velocity.magnitude > 0.25f;

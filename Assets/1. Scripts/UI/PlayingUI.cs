@@ -6,7 +6,7 @@ public enum PlayingUIState
     None,
     Inventory,
     Craft,
-    Option,
+    Conversation,
 }
 
 public class PlayingUI : MonoBehaviour, IBaseUI
@@ -57,6 +57,7 @@ public class PlayingUI : MonoBehaviour, IBaseUI
     {
         SetInventoryUI(state == PlayingUIState.Inventory);
         SetArchitectUI(state == PlayingUIState.Craft);
+        SetConversationUI(state == PlayingUIState.Conversation);
         GameManager.Instance.UIManager.ControlCursor(state != PlayingUIState.None);
 
         PlayingUIState = state;
@@ -78,17 +79,14 @@ public class PlayingUI : MonoBehaviour, IBaseUI
     }
 
     // 대화창 띄우기
-    public void SetDialogueUI(bool show, string dialogue = "")
+    private void SetConversationUI(bool show)
     {
+        conversationText.text = "";
         conversationPanel.SetActive(show);
-
-        if (show && !string.IsNullOrEmpty(dialogue))
-            conversationText.text = "";
-
-        GameManager.Instance.UIManager.ControlCursor(show);
     }
 
-    public Text GetDialogueText()
+    // 대화 텍스트 오브젝트 반환
+    public Text GetConversationText()
     {
         return conversationText;
     }

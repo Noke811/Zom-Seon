@@ -35,6 +35,8 @@ public class DayAndNight : MonoBehaviour
     }
     private void Update()
     {
+        if (!GameManager.Instance.IsPlaying) return;
+
         time = (time + timeRate * Time.deltaTime) % 1.0f;
 
         if (0.25f <= time && time <= 0.75f)

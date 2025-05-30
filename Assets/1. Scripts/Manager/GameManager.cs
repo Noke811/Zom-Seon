@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
         uiManager.ChangeUIState(UIState.Start);
     }
 
+    // 게임 시작
     public void GameStart()
     {
         IsPlaying = true;
@@ -46,12 +47,20 @@ public class GameManager : MonoBehaviour
         inventory.Init();
     }
 
+    // 플레이 중에 게임을 멈춤 : NPC 대화 등에 사용
+    public void GamePause(bool isPause)
+    {
+        IsPlaying = !isPause;
+    }
+
+    // 게임 오버
     public void GameOver()
     {
         IsPlaying = false;
         uiManager.ChangeUIState(UIState.Over);
     }
 
+    // 게임 종료
     public void GameExit()
     {
 #if UNITY_EDITOR

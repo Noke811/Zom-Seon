@@ -35,10 +35,10 @@ public class NPC_Interact : MonoBehaviour, IInteractable
             ai.StopMoving();
             FacePlayer(Camera.main.transform);
 
-            Time.timeScale = 0f;
+            GameManager.Instance.GamePause(true);
 
             // 대화 UI 켜기 (UIManager에게 책임 넘김)
-            GameManager.Instance.UIManager.PlayingUI.SetDialogueUI(true, dialogue);
+            GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.Conversation);
 
             StartCoroutine(TypeDialogue(dialogue));
             isTalking = true;
@@ -46,8 +46,8 @@ public class NPC_Interact : MonoBehaviour, IInteractable
         else
         {
             // 대화 UI 끄기
-            GameManager.Instance.UIManager.PlayingUI.SetDialogueUI(false);
-            Time.timeScale = 1f;
+            GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.None);
+            GameManager.Instance.GamePause(false);
             isTalking = false;
         }
     }
@@ -62,7 +62,7 @@ public class NPC_Interact : MonoBehaviour, IInteractable
 
     private IEnumerator TypeDialogue(string line)
     {
-        Text dialogueText = GameManager.Instance.UIManager.PlayingUI.GetDialogueText();
+        Text dialogueText = GameManager.Instance.UIManager.PlayingUI.GetConversationText();
         if (dialogueText == null)
             yield break;
 
