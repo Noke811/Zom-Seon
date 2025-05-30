@@ -249,5 +249,12 @@ public class Inventory : MonoBehaviour
         GameManager.Instance.Player.Equipment.Unequip(slots[selectedIndex].Data.Id);
         equippedIndex = -1;
         GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
+        if(slots[selectedIndex].Data.Type == ItemType.Equipable)
+        {
+            foreach (Buff buff in slots[selectedIndex].Data.Buffs)
+            {
+                GameManager.Instance.Player.Stat.Subtract(buff.Type);
+            }
+        }
     }
 }

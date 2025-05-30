@@ -5,8 +5,9 @@ public class CharacterStat : MonoBehaviour
     [Header("Stat")]
     public int baseAtk;
     public int baseDef;
-    private int equipAtkBonus;
-    private int equipDefBonus;
+    [SerializeField] private int equipAtkBonus;
+    [SerializeField] private int equipDefBonus;
+    
     public int FinalAtk
     {
         get
