@@ -16,9 +16,12 @@ public class ArchitectData : ScriptableObject
     public Sprite itemSprite;
     public GameObject itemPrefab;
     public GameObject itemPreviewPrefab;
-    public Dictionary<string, int> requiredMaterials;
     public bool isPlaceable;
     public bool isTool;
-    public Material originalMaterial;
     public CraftingResource[] craftingResources;
+
+    [Header("Health & Repair")]
+    public int maxHealth;
+    public CraftingResource[] repairResources;
+    public int repairAmount;
 }
