@@ -45,14 +45,17 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance.UIManager.IsUIActive) return;
+
         Move();
         Jumped();
     }
 
     private void LateUpdate()
     {
-        if(!GameManager.Instance.UIManager.IsUIActive)
-            Look();
+        if (GameManager.Instance.UIManager.IsUIActive) return;
+
+        Look();
     }
 
     private void Move()
@@ -132,7 +135,7 @@ public class PlayerController : MonoBehaviour
     // 상호작용 키 (F)
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && !GameManager.Instance.UIManager.IsUIActive)
         {
             interactableDetector.Interaction();
         }
@@ -143,7 +146,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GameManager.Instance.UIManager.SetInventoryUI();
+            GameManager.Instance.UIManager.ChangePlayingUIState(PlayingUIState.Inventory);
         }
     }
 
@@ -152,7 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GameManager.Instance.UIManager.SetArchitectUI();
+            GameManager.Instance.UIManager.ChangePlayingUIState(PlayingUIState.Craft);
         }
     }
 

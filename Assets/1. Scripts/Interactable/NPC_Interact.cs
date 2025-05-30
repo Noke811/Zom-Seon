@@ -22,7 +22,7 @@ public class NPC_Interact : MonoBehaviour, IInteractable
     public void OnInteract()
     {
         ai.StopMoving();
-        //FacePlayer();
+        FacePlayer(GameManager.Instance.Player.transform);
 
         dialogueText.text = dialogue;
         dialoguePanel.SetActive(true);

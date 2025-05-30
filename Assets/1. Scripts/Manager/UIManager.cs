@@ -1,6 +1,21 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum UIState
+{
+    Start,
+    Playing,
+    Over,
+}
+
+public enum PlayingUIState
+{
+    None,
+    Inventory,
+    Craft,
+    Option,
+}
+
 public class UIManager : MonoBehaviour
 {
     [Header("Interactable UI")]
@@ -18,7 +33,13 @@ public class UIManager : MonoBehaviour
     [Header("Architect UI")]
     [SerializeField] TabManager tabManager;
 
-    public bool IsUIActive { get; private set; }
+    [Header("Conversation UI")]
+    [SerializeField] GameObject conversationPanel;
+    Text conversationText;
+
+    public UIState State { get; private set; }
+    private PlayingUIState playingUIState;
+    public bool IsUIActive => playingUIState != PlayingUIState.None;
 
     // UI 매니저 초기화
     public void Init()
@@ -26,8 +47,21 @@ public class UIManager : MonoBehaviour
         itemButton.Init();
         setQuickslotButton.Init();
 
+        conversationText = conversationPanel.GetComponentInChildren<Text>();
+
         SetInteractableInfo(null);
-        SetInventoryUI(false);
+
+        ChangePlayingUIState(PlayingUIState.None);
+    }
+
+    // 게임 중 UI 상태 변경
+    public void ChangePlayingUIState(PlayingUIState state)
+    {
+        SetInventoryUI(state == PlayingUIState.Inventory ? true : false);
+        SetArchitectUI(state == PlayingUIState.Craft ? true : false);
+        ControlCursor(state != PlayingUIState.None ? true : false);
+
+        playingUIState = state;
     }
 
     // 상호작용 가능한 오브젝트 정보 표시 / 숨기기
@@ -45,34 +79,30 @@ public class UIManager : MonoBehaviour
         interactableInfo.SetActive(true);
     }
 
-    // 인벤토리 UI 띄우기 / 숨기기
-    public void SetInventoryUI()
+    // 대화창 띄우기
+    public void DisplayConversationUI(string dialogue)
     {
-        inventoryUI.SetActive(!inventoryUI.activeSelf);
-        if(!inventoryUI.activeSelf) setQuickslotButton.HideButtons();
-
-        ControlCursor(inventoryUI.activeSelf);
+        conversationText.text = dialogue;
+        conversationPanel.SetActive(true);
     }
-    public void SetInventoryUI(bool show)
+
+    // 인벤토리 UI 띄우기 / 숨기기
+    private void SetInventoryUI(bool show)
     {
         inventoryUI.SetActive(show);
         if(!show) setQuickslotButton.HideButtons();
-
-        ControlCursor(show);
     }
 
     // 제작 UI 띄우기 / 숨기기
-    public void SetArchitectUI()
+    private void SetArchitectUI(bool show)
     {
+        if (tabManager.IsActive == show) return;
         tabManager.SetMenu();
-
-        ControlCursor(tabManager.IsActive);
     }
 
     // UI가 켜지고 꺼짐에 따라 마우스 커서를 보이거나 안 보이게 설정
     private void ControlCursor(bool show)
     {
-        IsUIActive = show;
         Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
     }
 }
