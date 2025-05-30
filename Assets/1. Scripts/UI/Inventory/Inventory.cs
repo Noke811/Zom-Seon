@@ -227,7 +227,17 @@ public class Inventory : MonoBehaviour
     public void EquipItem()
     {
         GameManager.Instance.Player.Equipment.Equip(slots[selectedIndex].Data.Id);
+        
         // 장비 착용 시 스테이터스 오르는 로직 필요
+        if (slots[selectedIndex].Data.Type == ItemType.Equipable)
+        {
+            foreach (Buff buff in slots[selectedIndex].Data.Buffs)
+            {
+                // Add 호출해서 매개변수 넣어주고
+                GameManager.Instance.Player.Stat.Add(buff.Type, buff.Value);
+                // CharacterStat에서 if로 버브 타입이 Attack이면 equipAtkBonus 설정
+            }
+        }
 
         equippedIndex = selectedIndex;
         GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);

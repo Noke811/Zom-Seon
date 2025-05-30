@@ -25,8 +25,8 @@ public class Buff
     [Header("Buff Info")]
     [SerializeField] BuffType type;
     public BuffType Type => type;
-    [SerializeField] float value;
-    public float Value => value;
+    [SerializeField] int value;
+    public int Value => value;
 
     [Header("Duration")]
     [SerializeField] bool hasDuration;
