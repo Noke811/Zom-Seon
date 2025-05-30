@@ -5,60 +5,61 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance { get; private set; }
 
     [Header("Audio Sources")]
-    [SerializeField] private AudioSource bgmSource;
-    [SerializeField] private AudioSource sfxSource;
-    [SerializeField] private AudioSource loopSFXSource;
+    [SerializeField] private AudioSource bgmSource;         // 배경음악 재생용 AudioSource
+    [SerializeField] private AudioSource sfxSource;         // 일반 효과음 재생용 AudioSource
+    [SerializeField] private AudioSource loopSFXSource;     // 루프 효과음(걷기 등) 재생용 AudioSource
 
     [Header("Audio Clips")]
-    public AudioClip[] bgmClips;
-    public AudioClip[] sfxClips;
-    public AudioClip[] loopSFXClips;
+    [SerializeField] private AudioClip[] bgmClips;          // BGM 클립 리스트
+    [SerializeField] private AudioClip[] sfxClips;          // 효과음 클립 리스트
+    [SerializeField] private AudioClip[] loopSFXClips;      // 루프 효과음 클립 리스트
 
-    void Awake()
+    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-    void Start()
+    // 시작 BGM
+    private void Start()
     {
-        SoundManager.Instance.PlayBGM(0);
+        PlayBGM(0);
     }
+    // BGM 재생
     public void PlayBGM(int index)
     {
         if (index < 0 || index >= bgmClips.Length) return;
-        if (bgmSource.clip == bgmClips[index]) return; // 중복 방지
+        if (bgmSource.clip == bgmClips[index]) return;
 
         bgmSource.clip = bgmClips[index];
         bgmSource.loop = true;
         bgmSource.Play();
     }
 
+    // BGM 볼륨 설정
+    public void SetBGMVolume(float volume)
+    {
+        bgmSource.volume = Mathf.Clamp01(volume);
+    }
+
+    // 현재 BGM 볼륨
+    public float GetBGMVolume() => bgmSource.volume;
+
+    // 효과음 재생
     public void PlaySFX(int index)
     {
         if (index < 0 || index >= sfxClips.Length) return;
         sfxSource.PlayOneShot(sfxClips[index]);
     }
 
-    public void SetBGMVolume(float volume)
-    {
-        bgmSource.volume = Mathf.Clamp01(volume);
-    }
-
-    public void SetSFXVolume(float volume)
-    {
-        sfxSource.volume = Mathf.Clamp01(volume);
-    }
-    
+    // 루프 효과음 재생
     public void PlayLoopSFX(int index)
     {
         if (index < 0 || index >= loopSFXClips.Length) return;
-
         if (loopSFXSource.clip == loopSFXClips[index] && loopSFXSource.isPlaying) return;
 
         loopSFXSource.clip = loopSFXClips[index];
@@ -66,9 +67,24 @@ public class SoundManager : MonoBehaviour
         loopSFXSource.Play();
     }
 
+    // 루프 효과음 정지
     public void StopLoopSFX()
     {
         if (loopSFXSource.isPlaying)
             loopSFXSource.Stop();
+    }
+
+    // 일반 효과음 + 루프 효과음 볼륨 모두 설정
+    public void SetAllSFXVolume(float volume)
+    {
+        float v = Mathf.Clamp01(volume);
+        sfxSource.volume = v;
+        loopSFXSource.volume = v;
+    }
+
+    // 일반/루프 효과음 중 더 큰 볼륨 반환
+    public float GetAllSFXVolume()
+    {
+        return Mathf.Max(sfxSource.volume, loopSFXSource.volume);
     }
 }
