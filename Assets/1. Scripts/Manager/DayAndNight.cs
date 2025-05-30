@@ -55,6 +55,13 @@ public class DayAndNight : MonoBehaviour
         RenderSettings.reflectionIntensity = reflectionIntensityMultiplier.Evaluate(time);
     }
 
+    public void Init()
+    {
+        timeRate = 1.0f / fullDayLength;
+        time = startTime;
+        IsNight = false;
+    }
+
     void UpdateLighting(Light lightSource, Gradient colorGradiant, AnimationCurve intensityCurve)
     {
         float intensity = intensityCurve.Evaluate(time);

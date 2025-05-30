@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     {
         uiManager.ChangeUIState(UIState.Playing);
         inventory.Init();
+        dayCycle.Init();
         Player.Condition.OnRevive();
 
         IsPlaying = true;
