@@ -1,20 +1,18 @@
 using UnityEngine;
 
-public class CharacterInfo : MonoBehaviour
+public class CharacterStat : MonoBehaviour
 {
     [Header("Stat")]
-    public int health;
-    public int stamina;
-    private int _baseAtk;
-    private int _baseDef;
+    public int baseAtk;
+    public int baseDef;
+    [SerializeField] private int equipAtkBonus;
+    [SerializeField] private int equipDefBonus;
     
-    public int equipAtkBonus;
-    public int equipDefBonus;
     public int FinalAtk
     {
         get
         {
-            int totalAtk = _baseAtk + equipAtkBonus;
+            int totalAtk = baseAtk + equipAtkBonus;
             return totalAtk;
         }
     }
@@ -22,18 +20,22 @@ public class CharacterInfo : MonoBehaviour
     {
         get
         {
-            int totalDef = _baseDef + equipDefBonus;
+            int totalDef = baseDef + equipDefBonus;
             return totalDef;
         }
     }
     
-    public void Add()
+    public void Add(BuffType buff, int value)
     {
-
+        // 장비된 아이템의 버프 타입이 Attack이면
+        if (buff == BuffType.Attack)
+            equipAtkBonus = value;
+        // equipAtkBonus 증가
     }
 
-    public void Subtract()
+    public void Subtract(BuffType buff)
     {
-
+        if (buff == BuffType.Attack)
+            equipAtkBonus = 0;
     }
 }

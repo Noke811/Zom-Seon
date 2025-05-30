@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerCondition : MonoBehaviour, IDamagable
 {
     public UICondition uiCondition;
-    public PlayerController controller;
 
     Condition health { get { return uiCondition.health; } }
     Condition stamina { get { return uiCondition.stamina; } }
@@ -12,7 +11,6 @@ public class PlayerCondition : MonoBehaviour, IDamagable
 
     private void Awake()
     {
-        controller = GetComponent<PlayerController>();
         GameObject playerInfo = GameObject.Find("PlayerInfo");
         uiCondition = playerInfo.GetComponent<UICondition>();
     }
@@ -25,7 +23,7 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     private void Update()
     {
         PassiveUpdate();
-        UseStamina();
+        DashStamina();
     }
 
     private void PassiveUpdate()
@@ -41,11 +39,33 @@ public class PlayerCondition : MonoBehaviour, IDamagable
             health.Subtract(1f * Time.deltaTime);
     }
 
-    private void UseStamina()
+    private void DashStamina()
     {
-        if (controller.isDash)
+        if (GameManager.Instance.Player.Controller.isDash)
             stamina.Subtract(stamina.passiveValue * Time.deltaTime);
         else
             stamina.Add(stamina.passiveValue * Time.deltaTime);
+    }
+
+    public void AttackStamina()
+    {
+        stamina.Subtract(5);
+    }
+
+    public void JumpStamina()
+    {
+        stamina.Subtract(5);
+    }
+
+    public void Eat(BuffType buff, float value)
+    {
+        if (buff == BuffType.Health)
+            health.Add(value);
+        if (buff == BuffType.Stamina)
+            stamina.Add(value);
+        if (buff == BuffType.Hunger)
+            hunger.Add(value);
+        if (buff == BuffType.Thirst)
+            thirst.Add(value);
     }
 }

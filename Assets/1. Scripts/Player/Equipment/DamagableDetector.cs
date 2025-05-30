@@ -27,6 +27,7 @@ public class DamagableDetector : MonoBehaviour
         foreach (IDamagable damagable in damagables.Keys)
         {
             damagable.TakeDamage(damage);
+            GameManager.Instance.Player.Condition.AttackStamina();
         }
     }
 

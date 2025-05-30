@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
 
         uiManager.Init();
         inventory.Init();
-
+        
         DayCycle = GetComponentInChildren<DayAndNight>();
     }
 

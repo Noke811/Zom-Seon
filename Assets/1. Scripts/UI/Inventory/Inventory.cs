@@ -110,11 +110,15 @@ public class Inventory : MonoBehaviour
     public void EatItem()
     {
         // 아이템 효과 적용
-
+        foreach (Buff buff in slots[selectedIndex].Data.Buffs)
+        {
+            GameManager.Instance.Player.Condition.Eat(buff.Type, buff.Value);
+        }
+        
         slots[selectedIndex].DecreaseAmount(1);
         if (slots[selectedIndex].IsEmpty) ReleaseQuickslot();
     }
-
+    
     // 스왑 모드 활성화
     public void ActiveSwapMode()
     {
@@ -223,7 +227,17 @@ public class Inventory : MonoBehaviour
     public void EquipItem()
     {
         GameManager.Instance.Player.Equipment.Equip(slots[selectedIndex].Data.Id);
+        
         // 장비 착용 시 스테이터스 오르는 로직 필요
+        if (slots[selectedIndex].Data.Type == ItemType.Equipable)
+        {
+            foreach (Buff buff in slots[selectedIndex].Data.Buffs)
+            {
+                // Add 호출해서 매개변수 넣어주고
+                GameManager.Instance.Player.Stat.Add(buff.Type, buff.Value);
+                // CharacterStat에서 if로 버브 타입이 Attack이면 equipAtkBonus 설정
+            }
+        }
 
         equippedIndex = selectedIndex;
         GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
@@ -235,6 +249,13 @@ public class Inventory : MonoBehaviour
         GameManager.Instance.Player.Equipment.Unequip(slots[selectedIndex].Data.Id);
         equippedIndex = -1;
         GameManager.Instance.UIManager.ItemButton.DisplayItemButtons(selectedIndex == equippedIndex);
+        if(slots[selectedIndex].Data.Type == ItemType.Equipable)
+        {
+            foreach (Buff buff in slots[selectedIndex].Data.Buffs)
+            {
+                GameManager.Instance.Player.Stat.Subtract(buff.Type);
+            }
+        }
     }
 
     // 해당 아이템 ID를 가진 자원의 수량 반환
