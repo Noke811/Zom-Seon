@@ -181,6 +181,11 @@ public class BuildingManager : MonoBehaviour
         GameObject newObject = Instantiate(selectedItem.itemPrefab, currentPosition, previewObject.transform.rotation);
         newObject.layer = LayerMask.NameToLayer("Foundation"); //TODO: 예시 레이어. 이후 변경 필요
         ConsumeMaterials();
+        ArchitectHealth health = newObject.GetComponent<ArchitectHealth>();
+        if (health != null)
+        {
+            health.Init(selectedItem);
+        }
         Debug.Log(selectedItem.itemName + "건설 완료");
         CancelPlacement();
     }
