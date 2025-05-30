@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour
         if (context.started && isGround())
         {
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            GameManager.Instance.Player.Condition.JumpStamina();
         }
     }
     

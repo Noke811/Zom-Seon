@@ -23,7 +23,7 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     private void Update()
     {
         PassiveUpdate();
-        UseStamina();
+        DashStamina();
     }
 
     private void PassiveUpdate()
@@ -39,18 +39,20 @@ public class PlayerCondition : MonoBehaviour, IDamagable
             health.Subtract(1f * Time.deltaTime);
     }
 
-    private void UseStamina()
+    private void DashStamina()
     {
         if (GameManager.Instance.Player.Controller.isDash)
             stamina.Subtract(stamina.passiveValue * Time.deltaTime);
         else
             stamina.Add(stamina.passiveValue * Time.deltaTime);
-        
-        if (GameManager.Instance.Player.Controller.isGround() && Input.GetKeyDown(KeyCode.Space))
-            stamina.Subtract(5);
     }
 
-    public void AttackUseStamina()
+    public void AttackStamina()
+    {
+        stamina.Subtract(5);
+    }
+
+    public void JumpStamina()
     {
         stamina.Subtract(5);
     }
