@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
     // 상호작용 키 (F)
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (cantMove) return;
+        //if (cantMove) return;
 
         if (context.started)
         {

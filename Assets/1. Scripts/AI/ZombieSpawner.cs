@@ -11,6 +11,7 @@ public class ZombieSpawner : MonoBehaviour
 
     [Header("스폰 영역 (BoxCollider 포함)")]
     public Transform[] spawnZones;         // 스폰 구역으로 사용할 오브젝트들 (BoxCollider 필요)
+    public Transform parent;
 
     [Header("스폰 설정")]
     public float spawnInterval = 5f;       // 스폰 주기 (초 단위)
@@ -56,7 +57,7 @@ public class ZombieSpawner : MonoBehaviour
     {
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject obj = Instantiate(prefab);
+            GameObject obj = Instantiate(prefab, parent);
             obj.SetActive(false);
             pool.Enqueue(obj);
         }
@@ -64,73 +65,73 @@ public class ZombieSpawner : MonoBehaviour
 
     // 주기적으로 호출되는 좀비 생성 함수
     void SpawnZombies()
-{
-    // 현재 살아 있는 좀비 수 확인
-    int aliveCount = activeZombies.Count(z => z.activeInHierarchy);
-
-    // 최대치 도달 시 스폰 중단
-    if (aliveCount >= maxZombieCount) return;
-
-    // 설정된 수만큼 반복
-    for (int i = 0; i < spawnCountPerInterval; i++)
     {
-        // 반복 도중 최대치 도달하면 중단
-        if (activeZombies.Count(z => z.activeInHierarchy) >= maxZombieCount)
-            break;
+        // 현재 살아 있는 좀비 수 확인
+        int aliveCount = activeZombies.Count(z => z.activeInHierarchy);
 
-        // 스폰 구역 하나 선택 후 랜덤 위치 가져오기
-        Transform zone = spawnZones[Random.Range(0, spawnZones.Length)];
-        Vector3 spawnPos = GetRandomPositionInZone(zone);
+        // 최대치 도달 시 스폰 중단
+        if (aliveCount >= maxZombieCount) return;
 
-        // NavMesh 위 위치로 보정 (네비 메시 경계 문제 방지)
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(spawnPos, out hit, 2.0f, NavMesh.AllAreas))
+        // 설정된 수만큼 반복
+        for (int i = 0; i < spawnCountPerInterval; i++)
         {
-            spawnPos = hit.position; // 가장 가까운 네비 메시 지점으로 보정
+            // 반복 도중 최대치 도달하면 중단
+            if (activeZombies.Count(z => z.activeInHierarchy) >= maxZombieCount)
+                break;
+
+            // 스폰 구역 하나 선택 후 랜덤 위치 가져오기
+            Transform zone = spawnZones[Random.Range(0, spawnZones.Length)];
+            Vector3 spawnPos = GetRandomPositionInZone(zone);
+
+            // NavMesh 위 위치로 보정 (네비 메시 경계 문제 방지)
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(spawnPos, out hit, 2.0f, NavMesh.AllAreas))
+            {
+                spawnPos = hit.position; // 가장 가까운 네비 메시 지점으로 보정
+            }
+            else
+            {
+                Debug.LogWarning($"[스폰 취소] NavMesh 위가 아닌 위치입니다: {spawnPos}");
+                continue; // 스폰 건너뜀
+            }
+
+            // 강화 좀비 여부 확률 계산
+            bool isElite = Random.value < eliteZombieChance;
+
+            // 풀에서 꺼내기 (없으면 새로 생성)
+            GameObject zombieToSpawn = isElite
+                ? GetFromPool(zombie2Pool, zombie2Prefab)
+                : GetFromPool(zombiePool, zombiePrefab);
+
+            // 먼저 비활성화해서 NavMeshAgent 초기화 차단
+            zombieToSpawn.SetActive(false);
+
+            // 위치 지정
+            zombieToSpawn.transform.position = spawnPos;
+
+            // NavMeshAgent 강제로 재설정 (Warp 방식 사용)
+            NavMeshAgent agent = zombieToSpawn.GetComponent<NavMeshAgent>();
+            agent.enabled = false;
+            agent.Warp(spawnPos); // NavMesh 위로 강제 배치
+            agent.enabled = true;
+
+            // 활성화
+            zombieToSpawn.SetActive(true);
+
+            // 스탯 설정
+            ZombieStats stats = zombieToSpawn.GetComponent<ZombieStats>();
+            stats.spawner = this;
+            stats.isElite = isElite;
+            stats.ResetHealth();
+
+            // 좀비 초기화 메서드 호출
+            zombieToSpawn.GetComponent<ZombieAI>().OnResurrected();
+
+            // 리스트에 등록 (중복 방지)
+            if (!activeZombies.Contains(zombieToSpawn))
+                activeZombies.Add(zombieToSpawn);
         }
-        else
-        {
-            Debug.LogWarning($"[스폰 취소] NavMesh 위가 아닌 위치입니다: {spawnPos}");
-            continue; // 스폰 건너뜀
-        }
-
-        // 강화 좀비 여부 확률 계산
-        bool isElite = Random.value < eliteZombieChance;
-
-        // 풀에서 꺼내기 (없으면 새로 생성)
-        GameObject zombieToSpawn = isElite
-            ? GetFromPool(zombie2Pool, zombie2Prefab)
-            : GetFromPool(zombiePool, zombiePrefab);
-
-        // 먼저 비활성화해서 NavMeshAgent 초기화 차단
-        zombieToSpawn.SetActive(false);
-
-        // 위치 지정
-        zombieToSpawn.transform.position = spawnPos;
-
-        // NavMeshAgent 강제로 재설정 (Warp 방식 사용)
-        NavMeshAgent agent = zombieToSpawn.GetComponent<NavMeshAgent>();
-        agent.enabled = false;
-        agent.Warp(spawnPos); // NavMesh 위로 강제 배치
-        agent.enabled = true;
-
-        // 활성화
-        zombieToSpawn.SetActive(true);
-
-        // 스탯 설정
-        ZombieStats stats = zombieToSpawn.GetComponent<ZombieStats>();
-        stats.spawner = this;
-        stats.isElite = isElite;
-        stats.ResetHealth();
-
-        // 좀비 초기화 메서드 호출
-        zombieToSpawn.GetComponent<ZombieAI>().OnResurrected();
-
-        // 리스트에 등록 (중복 방지)
-        if (!activeZombies.Contains(zombieToSpawn))
-            activeZombies.Add(zombieToSpawn);
     }
-}
 
     // 특정 스폰 구역 안에서 랜덤한 위치 반환
     Vector3 GetRandomPositionInZone(Transform zone)
@@ -152,7 +153,7 @@ public class ZombieSpawner : MonoBehaviour
         if (pool.Count > 0)
             return pool.Dequeue();
         else
-            return Instantiate(prefab);
+            return Instantiate(prefab, parent);
     }
 
     // 좀비 사망 또는 비활성화 시 호출 → 풀로 복귀
@@ -184,6 +185,16 @@ public class ZombieSpawner : MonoBehaviour
                     Gizmos.DrawWireCube(box.bounds.center, box.bounds.size);
                 }
             }
+        }
+    }
+
+    // 모든 좀비 죽이기
+    public void DieAllZombies()
+    {
+        ZombieStats[] zombies = parent.GetComponentsInChildren<ZombieStats>();
+        foreach(var zombie in zombies)
+        {
+            zombie.TakeDamage(1000);
         }
     }
 }

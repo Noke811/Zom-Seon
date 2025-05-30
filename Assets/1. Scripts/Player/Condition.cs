@@ -18,6 +18,11 @@ public class Condition : MonoBehaviour
         curValue = maxValue;
     }
 
+    public void Init()
+    {
+        curValue = maxValue;
+    }
+
     private void Update()
     {
         UIBarUpdate();
