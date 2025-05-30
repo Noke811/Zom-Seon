@@ -11,8 +11,9 @@ public class PlayerController : MonoBehaviour
     public float rayDistance;
     public LayerMask groundLayerMask;
     
-    private Vector2 _moveInput;
+    private Animator _animator;
     private Rigidbody _rigidbody;
+    private Vector2 _moveInput;
     private Vector3 _direction;
     private float _dashSpeed;
     
@@ -28,7 +29,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 _mouseDelta;
     private float _camCurXRot;
 
-    private Animator _animator;
+    [Header("Attack")]
+    public float attackCooltime;
+
+    private float _attackNextCool;
     
     private void Start()
     {
@@ -171,7 +175,12 @@ public class PlayerController : MonoBehaviour
         if (context.started && GameManager.Instance.Player.Equipment.IsEquip &&
             !GameManager.Instance.UIManager.IsUIActive)
         {
-            GameManager.Instance.Player.Equipment.Attack();
+            bool isCoolDown = Time.time >= _attackNextCool;
+            if (isCoolDown)
+            {
+                GameManager.Instance.Player.Equipment.Attack();
+                _attackNextCool = Time.time + attackCooltime;
+            }
         }
     }
 
