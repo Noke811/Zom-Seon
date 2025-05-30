@@ -17,6 +17,10 @@ public class UIManager : MonoBehaviour
 
     [Header("Architect UI")]
     [SerializeField] TabManager tabManager;
+    
+    [Header("Dialogue UI")]
+    [SerializeField] private GameObject dialoguePanel;
+    [SerializeField] private Text dialogueText;
 
     public bool IsUIActive { get; private set; }
 
@@ -74,5 +78,20 @@ public class UIManager : MonoBehaviour
     {
         IsUIActive = show;
         Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+    
+    public void SetDialogueUI(bool show, string dialogue = "")
+    {
+        dialoguePanel.SetActive(show);
+
+        if (show && !string.IsNullOrEmpty(dialogue))
+            dialogueText.text = "";
+
+        ControlCursor(show); 
+    }
+    
+    public Text GetDialogueText()
+    {
+        return dialogueText;
     }
 }
