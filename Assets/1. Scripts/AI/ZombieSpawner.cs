@@ -11,6 +11,7 @@ public class ZombieSpawner : MonoBehaviour
 
     [Header("스폰 영역 (BoxCollider 포함)")]
     public Transform[] spawnZones;         // 스폰 구역으로 사용할 오브젝트들 (BoxCollider 필요)
+    public Transform parent;
 
     [Header("스폰 설정")]
     public float spawnInterval = 5f;       // 스폰 주기 (초 단위)
@@ -56,7 +57,7 @@ public class ZombieSpawner : MonoBehaviour
     {
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject obj = Instantiate(prefab, transform);
+            GameObject obj = Instantiate(prefab, parent);
             obj.SetActive(false);
             pool.Enqueue(obj);
         }
@@ -152,7 +153,7 @@ public class ZombieSpawner : MonoBehaviour
         if (pool.Count > 0)
             return pool.Dequeue();
         else
-            return Instantiate(prefab, transform);
+            return Instantiate(prefab, parent);
     }
 
     // 좀비 사망 또는 비활성화 시 호출 → 풀로 복귀
@@ -184,6 +185,16 @@ public class ZombieSpawner : MonoBehaviour
                     Gizmos.DrawWireCube(box.bounds.center, box.bounds.size);
                 }
             }
+        }
+    }
+
+    // 모든 좀비 죽이기
+    public void DieAllZombies()
+    {
+        ZombieStats[] zombies = parent.GetComponentsInChildren<ZombieStats>();
+        foreach(var zombie in zombies)
+        {
+            zombie.TakeDamage(1000);
         }
     }
 }

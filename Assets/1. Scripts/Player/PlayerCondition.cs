@@ -52,14 +52,19 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     private void Death()
     {
         if (health.curValue <= 0f)
-        { 
-            // 죽었을 때 UI 띄우기
+        {
+            GameManager.Instance.GameOver();
         }
     }
 
     public void OnRevive()
     {
-        this.transform.position = GameManager.Instance.Player.spawnPoint;
+        health.Init();
+        stamina.Init();
+        hunger.Init();
+        thirst.Init();
+
+        transform.position = Vector3.zero;
     }
 
     public void AttackStamina()

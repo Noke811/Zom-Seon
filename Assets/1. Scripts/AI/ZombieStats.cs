@@ -38,7 +38,7 @@ public class ZombieStats : MonoBehaviour, IDamagable
     }
 
     // 사망 처리
-    void Die()
+    private void Die()
     {
         Debug.Log("[ZombieStats] 좀비 사망 처리 실행");
 

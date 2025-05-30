@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Inventory Inventory => inventory;
     [SerializeField] DayAndNight dayCycle;
     public DayAndNight DayCycle => dayCycle;
+    [SerializeField] ZombieSpawner spawner;
 
     private void Awake()
     {
@@ -42,9 +43,11 @@ public class GameManager : MonoBehaviour
     // 게임 시작
     public void GameStart()
     {
-        IsPlaying = true;
         uiManager.ChangeUIState(UIState.Playing);
         inventory.Init();
+        Player.Condition.OnRevive();
+
+        IsPlaying = true;
     }
 
     // 플레이 중에 게임을 멈춤 : NPC 대화 등에 사용
@@ -57,6 +60,8 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         IsPlaying = false;
+
+        spawner.DieAllZombies();
         uiManager.ChangeUIState(UIState.Over);
     }
 
