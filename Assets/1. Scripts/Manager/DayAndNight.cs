@@ -67,4 +67,10 @@ public class DayAndNight : MonoBehaviour
         else if (lightSource.intensity > 0 && !go.activeInHierarchy)
             go.SetActive(true);
     }
+
+    public void SetTimeToMorning()
+    {
+        time = startTime;
+        Debug.Log("Set Time to Morning");
+    }
 }

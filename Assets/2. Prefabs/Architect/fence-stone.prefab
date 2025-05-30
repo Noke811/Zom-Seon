@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 560521102933139281}
   - component: {fileID: 2800811423681065368}
   - component: {fileID: 4201866269503491344}
+  - component: {fileID: 6331783602708824897}
   m_Layer: 0
   m_Name: fence-stone
   m_TagString: Untagged
@@ -106,3 +107,15 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -68046031967502180, guid: 51acbee076be55d49b751f5e2140fe0a, type: 3}
+--- !u!114 &6331783602708824897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441409487586802700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 394beb19ac0f8e04f85b6b9701fd1056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
