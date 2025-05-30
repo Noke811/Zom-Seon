@@ -25,6 +25,7 @@ public class PlayerCondition : MonoBehaviour, IDamagable
 
         PassiveUpdate();
         DashStamina();
+        Death();
     }
 
     private void PassiveUpdate()
@@ -46,6 +47,19 @@ public class PlayerCondition : MonoBehaviour, IDamagable
             stamina.Subtract(stamina.passiveValue * Time.deltaTime);
         else
             stamina.Add(stamina.passiveValue * Time.deltaTime);
+    }
+
+    private void Death()
+    {
+        if (health.curValue <= 0f)
+        { 
+            // 죽었을 때 UI 띄우기
+        }
+    }
+
+    public void OnRevive()
+    {
+        this.transform.position = GameManager.Instance.Player.spawnPoint;
     }
 
     public void AttackStamina()
