@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
     public UIManager UIManager => uiManager;
     [SerializeField] Inventory inventory;
     public Inventory Inventory => inventory;
-    [SerializeField] Buff buffClass;
-    public Buff BuffClass => buffClass;
     public DayAndNight DayCycle { get; private set; }
 
     private void Awake()
@@ -31,7 +29,7 @@ public class GameManager : MonoBehaviour
 
         uiManager.Init();
         inventory.Init();
-
+        
         DayCycle = GetComponentInChildren<DayAndNight>();
     }
 
