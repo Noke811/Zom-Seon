@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     public InteractableDetector Head { get; private set; }
     public DamagableDetector Detector { get; private set; }
 
+    public Vector3 spawnPoint = new Vector3(0f, -0.01f, 0);
+    
     private void Awake()
     {
         Controller = GetComponent<PlayerController>();
