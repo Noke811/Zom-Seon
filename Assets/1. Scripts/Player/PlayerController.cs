@@ -66,6 +66,13 @@ public class PlayerController : MonoBehaviour
         _direction.y = _rigidbody.velocity.y;
         
         _rigidbody.velocity = _direction;
+        
+        bool isWalking = _moveInput.magnitude > 0.1f && isGround();
+
+        if (isWalking)
+            SoundManager.Instance.PlayLoopSFX(0);
+        else
+            SoundManager.Instance.StopLoopSFX();
     }
 
     private void Look()
