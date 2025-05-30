@@ -25238,6 +25238,8 @@ MonoBehaviour:
   inventory: {fileID: 1782853478}
   dayCycle: {fileID: 518240320}
   spawner: {fileID: 8701677571946777469}
+  axe: {fileID: 11400000, guid: ab587c13ab6bfd642b72b0ccc7a65b11, type: 2}
+  pickaxe: {fileID: 11400000, guid: 36b05a55483fc954187589c5eb706d8b, type: 2}
 --- !u!4 &1980584991
 Transform:
   m_ObjectHideFlags: 0
