@@ -18,4 +18,13 @@ MonoBehaviour:
   itemPreviewPrefab: {fileID: 2407691278521098108, guid: 410efebc947cfe449a1e31048603497a, type: 3}
   isPlaceable: 1
   isTool: 0
-  originalMaterial: {fileID: 0}
+  craftingResources:
+  - id: 100
+    amount: 1
+  - id: 103
+    amount: 2
+  maxHealth: 50
+  repairResources:
+  - id: 100
+    amount: 1
+  repairAmount: 25
