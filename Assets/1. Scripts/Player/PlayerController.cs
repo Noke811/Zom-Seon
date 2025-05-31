@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private int _isRun;
     private int _isJump;
     public bool isDash;
+    
 
     [Header("Looking")]
     Transform cameraContainer;
@@ -225,5 +226,5 @@ public class PlayerController : MonoBehaviour
             curMoveSpeed = _baseMoveSpeed;
             isDash = false;
         }
-    }   
+    }
 }
