@@ -94,7 +94,7 @@ public class ArchitectHealth : MonoBehaviour, IDamagable, IInteractable
     public void OnInteract()
     {
         if (architectData == null) return;
-        if (currentHealth >= architectData.maxHealth)
+        if (currentHealth <= architectData.maxHealth)
         {
             TryRepair();
         }
