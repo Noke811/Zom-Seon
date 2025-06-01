@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Vector3 playerPos;
     [SerializeField] ItemData axe;
     [SerializeField] ItemData pickaxe;
+    [SerializeField] ItemData bucket;
 
     private void Awake()
     {
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
 
         inventory.AddInventory(axe, 1);
         inventory.AddInventory(pickaxe, 1);
+        inventory.AddInventory(bucket, 1);
 
         resourceSpawner.SpawnResources();
 
@@ -75,6 +77,8 @@ public class GameManager : MonoBehaviour
 
         spawner.DieAllZombies();
         uiManager.ChangeUIState(UIState.Over);
+
+        player.Equipment.Unequip(player.Equipment.CurID);
     }
 
     // 게임 종료

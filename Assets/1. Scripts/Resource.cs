@@ -8,6 +8,7 @@ public class Resource : MonoBehaviour, IDamagable
     Collider baseCollider;
     [SerializeField] int[] equipmentId;
     [SerializeField] int maxAmount;
+    [SerializeField] bool isWater;
     int remain;
     bool isRemain => remain > 0;
     bool prevDayState;
@@ -21,6 +22,12 @@ public class Resource : MonoBehaviour, IDamagable
 
     private void Awake()
     {
+        if (isWater) 
+        {
+            baseCollider = GetComponent<Collider>();
+            return;
+        }
+
         baseRenderer = GetComponent<Renderer>();
         baseCollider = GetComponent<Collider>();
 
@@ -29,6 +36,8 @@ public class Resource : MonoBehaviour, IDamagable
 
     private void Update()
     {
+        if (isWater) return;
+
         // 아침이 되면 다시 재생성
         if(prevDayState == true && !GameManager.Instance.DayCycle.IsNight && !isRemain)
         {
@@ -60,6 +69,12 @@ public class Resource : MonoBehaviour, IDamagable
     // 리소스가 데미지를 입으면 아이템을 드랍
     public void TakeDamage(int damage)
     {
+        if (isWater && IsCorrectTool())
+        {
+            GameManager.Instance.Player.Condition.Eat(BuffType.Thirst, 10f);
+            return;
+        }
+
         if (!isRemain || !IsCorrectTool()) return;
 
         remain--;
