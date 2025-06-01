@@ -10144,6 +10144,7 @@ GameObject:
   - component: {fileID: 839414850}
   - component: {fileID: 839414849}
   - component: {fileID: 839414848}
+  - component: {fileID: 839414851}
   m_Layer: 5
   m_Name: Button (Legacy)
   m_TagString: Untagged
@@ -10166,11 +10167,11 @@ RectTransform:
   - {fileID: 1608999747}
   m_Father: {fileID: 1114638472}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 400, y: -70}
-  m_SizeDelta: {x: 160, y: 30}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -10, y: 10}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &839414848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10253,6 +10254,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839414846}
   m_CullTransparentMesh: 1
+--- !u!114 &839414851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839414846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &844069595
 GameObject:
   m_ObjectHideFlags: 0
@@ -22155,7 +22171,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
@@ -22164,7 +22180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB300\uD654 \uC885\uB8CC"
+  m_Text: "\uB098\uAC00\uAE30"
 --- !u!222 &1608999749
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -32381,7 +32397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0140ed88621c1be47a5e7d044b4e362e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseAtk: 50
+  baseAtk: 0
   baseDef: 0
   equipAtkBonus: 0
   equipDefBonus: 0

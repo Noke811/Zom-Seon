@@ -22,6 +22,6 @@ MonoBehaviour:
   maxAmount: 1
   buffs:
   - type: 6
-    value: 10
+    value: 200
     hasDuration: 0
     duration: 0
