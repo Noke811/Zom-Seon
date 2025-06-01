@@ -18,8 +18,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] DayAndNight dayCycle;
     public DayAndNight DayCycle => dayCycle;
     [SerializeField] ZombieSpawner spawner;
+    [SerializeField] ResourceSpawner resourceSpawner;
 
-    [Header("Initial Item")]
+    [Header("Init")]
+    [SerializeField] Vector3 playerPos;
     [SerializeField] ItemData axe;
     [SerializeField] ItemData pickaxe;
 
@@ -50,10 +52,12 @@ public class GameManager : MonoBehaviour
         uiManager.ChangeUIState(UIState.Playing);
         inventory.Init();
         dayCycle.Init();
-        Player.Condition.OnRevive();
+        Player.Condition.OnRevive(playerPos);
 
         inventory.AddInventory(axe, 1);
         inventory.AddInventory(pickaxe, 1);
+
+        resourceSpawner.SpawnResources();
 
         IsPlaying = true;
     }
