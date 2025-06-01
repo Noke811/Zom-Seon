@@ -34,7 +34,7 @@ public class DamagableDetector : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == 1 << playerLayer) return;
+        if (playerLayer == 1 << other.gameObject.layer) return;
 
         if (other.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
         {
