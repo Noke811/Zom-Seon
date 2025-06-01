@@ -19,6 +19,7 @@ public class Equipment : MonoBehaviour
         }
 
         CurID = -1;
+        animator.speed = 1f / GameManager.Instance.Player.Controller.attackCooltime;
     }
 
     // 장비 착용

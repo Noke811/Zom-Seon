@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DamagableDetector : MonoBehaviour
 {
+    [SerializeField] LayerMask playerLayer;
     Dictionary<IDamagable, bool> damagables = new Dictionary<IDamagable, bool>();
 
     private void FixedUpdate()
@@ -33,7 +34,7 @@ public class DamagableDetector : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log("Trigger Stay with: " + other.name);
+        if (other.gameObject.layer == 1 << playerLayer) return;
 
         if (other.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
         {

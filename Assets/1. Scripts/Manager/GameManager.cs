@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Init")]
     [SerializeField] Vector3 playerPos;
+    [SerializeField] Transform itemParent;
+    public Transform ItemParent => itemParent;
     [SerializeField] ItemData axe;
     [SerializeField] ItemData pickaxe;
     [SerializeField] ItemData bucket;
@@ -79,6 +81,10 @@ public class GameManager : MonoBehaviour
         uiManager.ChangeUIState(UIState.Over);
 
         player.Equipment.Unequip(player.Equipment.CurID);
+        for(int i = 0; i < itemParent.childCount; i++)
+        {
+            Destroy(itemParent.GetChild(i));
+        }
     }
 
     // 게임 종료

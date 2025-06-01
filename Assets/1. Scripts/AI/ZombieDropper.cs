@@ -15,7 +15,7 @@ public class ZombieDropper : MonoBehaviour
     // 아이템 드롭
     public void DropItems()
     {
-        Debug.Log($"[DropItems] 호출됨 - 대상 수: {dropItems.Length}");
+        // Debug.Log($"[DropItems] 호출됨 - 대상 수: {dropItems.Length}");
 
         foreach (var data in dropItems)
         {
@@ -26,7 +26,7 @@ public class ZombieDropper : MonoBehaviour
             }
 
             float roll = Random.value;
-            Debug.Log($"[DropItems] {data.itemPrefab.name} 드롭 확률: {data.dropProbability}, 랜덤값: {roll}");
+            //Debug.Log($"[DropItems] {data.itemPrefab.name} 드롭 확률: {data.dropProbability}, 랜덤값: {roll}");
             
             if (roll <= data.dropProbability)
             {
@@ -35,7 +35,7 @@ public class ZombieDropper : MonoBehaviour
                 Vector3 dropPos = transform.position + offset + Vector3.up * 0.3f;
 
                 // 아이템 생성
-                GameObject dropped = Instantiate(data.itemPrefab, dropPos, Quaternion.identity);
+                GameObject dropped = Instantiate(data.itemPrefab, dropPos, Quaternion.identity, GameManager.Instance.ItemParent);
             }
         }
     }

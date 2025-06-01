@@ -78,7 +78,7 @@ public class Resource : MonoBehaviour, IDamagable
         if (!isRemain || !IsCorrectTool()) return;
 
         remain--;
-        Instantiate(dropItem, GetRandomPosition(), Quaternion.identity);
+        Instantiate(dropItem, GetRandomPosition(), Quaternion.identity, GameManager.Instance.ItemParent);
 
         if(!isRemain)
         {

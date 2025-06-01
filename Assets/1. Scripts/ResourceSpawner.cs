@@ -3,8 +3,8 @@ using UnityEngine;
 public class ResourceSpawner : MonoBehaviour
 {
     [SerializeField] Terrain terrain;
-    [SerializeField] GameObject tree;
-    [SerializeField] GameObject rock;
+    [SerializeField] GameObject treePrefab;
+    [SerializeField] GameObject rockPrefab;
     [SerializeField] int treeCnt;
     [SerializeField] int rockCnt;
 
@@ -20,7 +20,10 @@ public class ResourceSpawner : MonoBehaviour
             float z = randZ * terrain.terrainData.size.z;
             float y = terrain.SampleHeight(new Vector3(x, 0, z));
 
-            Instantiate(tree, new Vector3(x, y - yFactor, z), Quaternion.identity, transform);
+            GameObject tree = Instantiate(treePrefab, transform);
+            tree.transform.position = new Vector3(x, y - yFactor, z);
+            tree.transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+            tree.transform.localScale = Vector3.one * Random.Range(2.8f, 3.2f);
         }
 
         for (int i = 0; i < rockCnt; i++)
@@ -31,7 +34,10 @@ public class ResourceSpawner : MonoBehaviour
             float z = randZ * terrain.terrainData.size.z;
             float y = terrain.SampleHeight(new Vector3(x, 0, z));
 
-            Instantiate(rock, new Vector3(x, y - yFactor, z), Quaternion.identity, transform);
+            GameObject rock = Instantiate(rockPrefab, transform);
+            rock.transform.position = new Vector3(x, y - yFactor, z);
+            rock.transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+            rock.transform.localScale = Vector3.one * Random.Range(2.8f, 3.2f);
         }
     }
 
