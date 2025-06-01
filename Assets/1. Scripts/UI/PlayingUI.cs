@@ -38,6 +38,9 @@ public class PlayingUI : MonoBehaviour, IBaseUI
     [Header("Conversation UI")]
     [SerializeField] GameObject conversationPanel;
     Text conversationText;
+    [SerializeField] Button closeButton;
+    private NPC_Interact currentNPCINteractor;
+
 
     // 플레잉 UI 초기화
     private void Init()
@@ -90,6 +93,7 @@ public class PlayingUI : MonoBehaviour, IBaseUI
     {
         return conversationText;
     }
+    
 
     // 인벤토리 UI 띄우기 / 숨기기
     private void SetInventoryUI(bool show)
@@ -116,5 +120,20 @@ public class PlayingUI : MonoBehaviour, IBaseUI
         {
             Init();
         }
+    }
+
+    public void SetUpNPCInteract(NPC_Interact npc, string dialogue)
+    {
+        this.currentNPCINteractor = npc;
+        this.conversationText.text = dialogue;
+        if (closeButton != null && this.currentNPCINteractor != null)
+        {
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(OnClickCloseButton);
+        }
+    }
+    private void OnClickCloseButton()
+    {
+        currentNPCINteractor.EndConversation();
     }
 }
