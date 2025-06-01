@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.AI;
+using System.Collections;
 
-// 좀비의 능력치와 체력 관리, 데미지 처리 등을 담당
 public class ZombieStats : MonoBehaviour, IDamagable
 {
     // 좀비의 최대 체력
@@ -18,10 +19,20 @@ public class ZombieStats : MonoBehaviour, IDamagable
     // 나를 생성한 ZombieSpawner를 저장
     [HideInInspector] public ZombieSpawner spawner;
 
+    // 색상 피드백용 변수 추가
+    private SkinnedMeshRenderer[] meshRenderers;
+    private Coroutine flashCoroutine;
+
     // 게임 오브젝트가 생성될 때 최대 체력으로 초기화
     private void Awake()
     {
         currentHealth = maxHealth;
+        
+        meshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach (var renderer in meshRenderers)
+        {
+            renderer.material = new Material(renderer.material);
+        }
     }
 
     // 외부에서 데미지를 입힐 때 호출
@@ -30,11 +41,48 @@ public class ZombieStats : MonoBehaviour, IDamagable
         currentHealth -= damage;
         Debug.Log($"[ZombieStats] 데미지 {damage} 입음 → 남은 체력: {currentHealth}");
 
+        // 색상 변경 코루틴 실행
+        if (flashCoroutine != null)
+            StopCoroutine(flashCoroutine);
+        flashCoroutine = StartCoroutine(FlashRed());
+
         // 체력이 0 이하가 되면 사망 처리
         if (currentHealth <= 0)
         {
             Die();
         }
+    }
+
+    // 일시적으로 빨갛게 변했다가 원래 색으로 복구
+    private IEnumerator FlashRed()
+    {
+        // 원래 색 저장
+        Color originalColor = meshRenderers[0].material.color;
+
+        // 즉시 빨간색으로 설정
+        foreach (var renderer in meshRenderers)
+            renderer.material.color = Color.red;
+
+        // 천천히 복원
+        float duration = 0.5f; // 복원 시간
+        float t = 0f;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float lerpFactor = t / duration;
+
+            foreach (var renderer in meshRenderers)
+            {
+                renderer.material.color = Color.Lerp(Color.red, originalColor, lerpFactor);
+            }
+
+            yield return null;
+        }
+
+        // 마지막 보정
+        foreach (var renderer in meshRenderers)
+            renderer.material.color = originalColor;
     }
 
     // 사망 처리
