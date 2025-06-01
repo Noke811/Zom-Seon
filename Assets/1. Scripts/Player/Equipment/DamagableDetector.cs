@@ -33,7 +33,9 @@ public class DamagableDetector : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
+        Debug.Log("Trigger Stay with: " + other.name);
+
+        if (other.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
         {
             damagables[damagable] = true;
         }

@@ -18,10 +18,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] DayAndNight dayCycle;
     public DayAndNight DayCycle => dayCycle;
     [SerializeField] ZombieSpawner spawner;
+    [SerializeField] ResourceSpawner resourceSpawner;
 
-    [Header("Initial Item")]
+    [Header("Init")]
+    [SerializeField] Vector3 playerPos;
     [SerializeField] ItemData axe;
     [SerializeField] ItemData pickaxe;
+    [SerializeField] ItemData bucket;
 
     private void Awake()
     {
@@ -50,10 +53,13 @@ public class GameManager : MonoBehaviour
         uiManager.ChangeUIState(UIState.Playing);
         inventory.Init();
         dayCycle.Init();
-        Player.Condition.OnRevive();
+        Player.Condition.OnRevive(playerPos);
 
         inventory.AddInventory(axe, 1);
         inventory.AddInventory(pickaxe, 1);
+        inventory.AddInventory(bucket, 1);
+
+        resourceSpawner.SpawnResources();
 
         IsPlaying = true;
     }
@@ -71,6 +77,8 @@ public class GameManager : MonoBehaviour
 
         spawner.DieAllZombies();
         uiManager.ChangeUIState(UIState.Over);
+
+        player.Equipment.Unequip(player.Equipment.CurID);
     }
 
     // 게임 종료
