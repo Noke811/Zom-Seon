@@ -57,14 +57,14 @@ public class PlayerCondition : MonoBehaviour, IDamagable
         }
     }
 
-    public void OnRevive()
+    public void OnRevive(Vector3 playerPos)
     {
         health.Init();
         stamina.Init();
         hunger.Init();
         thirst.Init();
 
-        transform.position = Vector3.zero;
+        transform.position = playerPos;
     }
 
     public void AttackStamina()
