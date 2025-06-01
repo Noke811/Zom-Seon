@@ -6,9 +6,9 @@ public class Equipment : MonoBehaviour
     [SerializeField] Transform pivot;
     Dictionary<int, GameObject> equipObject = new Dictionary<int, GameObject>();
     public int CurID { get; private set; }
-
     public bool IsEquip => CurID != -1;
-
+    [SerializeField] Animator animator;
+    
     private void Awake()
     {
         for(int i = 0; i < pivot.childCount; i++)
@@ -49,6 +49,9 @@ public class Equipment : MonoBehaviour
     public void Attack()
     {
         if (IsEquip)
+        {
+            animator.SetTrigger("Attack");
             GameManager.Instance.Player.Detector.AttackDamagables(GameManager.Instance.Player.Stat.FinalAtk);
+        }
     }
 }
