@@ -40,21 +40,32 @@ public class NPC_Interact : MonoBehaviour, IInteractable
 
             GameManager.Instance.GamePause(true);
 
+            GameManager.Instance.UIManager.PlayingUI.SetUpNPCInteract(this, dialogue);
             // 대화 UI 켜기 (UIManager에게 책임 넘김)
             GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.Conversation);
 
             StartCoroutine(TypeDialogue(dialogue));
             isTalking = true;
         }
-        else
+        /*else
         {
             // 대화 UI 끄기
             GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.None);
             GameManager.Instance.GamePause(false);
             isTalking = false;
-        }
+        }*/
     }
 
+    public void EndConversation()
+    {
+        if (!isTalking)
+        {
+            return;
+        }
+        GameManager.Instance.UIManager.PlayingUI.ChangePlayingUIState(PlayingUIState.None);
+        GameManager.Instance.GamePause(false);
+        isTalking = false;
+    }
     public void FacePlayer(Transform playerTransform)
     {
         Vector3 dir = playerTransform.position - transform.position;
