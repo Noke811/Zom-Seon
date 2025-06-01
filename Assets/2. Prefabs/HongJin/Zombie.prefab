@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 392731054624933761}
   - component: {fileID: -8812169549300961467}
   - component: {fileID: 4464995123763833138}
+  - component: {fileID: 578433316497353070}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Untagged
@@ -393,6 +394,39 @@ MonoBehaviour:
   attackTargetMask:
     serializedVersion: 2
     m_Bits: 136
+--- !u!114 &578433316497353070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009613010746482929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82a45f39e83f3014aa660f44610b0fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropItems:
+  - itemPrefab: {fileID: 5820684398469506933, guid: 470c900c1c195124da30d7f3db4f3c06, type: 3}
+    dropProbability: 1
+  - itemPrefab: {fileID: 2987484290620916804, guid: e60a5d2157b4e8c499f03cdf54837ee4, type: 3}
+    dropProbability: 1
+  - itemPrefab: {fileID: 3893437225807857156, guid: 87871a3f45176e241a3c8f4bf6391979, type: 3}
+    dropProbability: 0
+  - itemPrefab: {fileID: 1848027156900262496, guid: 2da087cca403b77448a25cd247cb3f8b, type: 3}
+    dropProbability: 0
+  - itemPrefab: {fileID: 318807647279648663, guid: 4146ea1b3fb8a0a4db7cc435345d7ee6, type: 3}
+    dropProbability: 0
+  - itemPrefab: {fileID: 3397903797495453785, guid: 9d79a041e0a69de488277a61f2c3d3b2, type: 3}
+    dropProbability: 0
+  - itemPrefab: {fileID: 4497440488380192135, guid: 0ddba7f4552c4c74fa3454221ee391f9, type: 3}
+    dropProbability: 0
+  - itemPrefab: {fileID: 6519881225997919627, guid: 94fd6995251f58b45a0f0e874d533957, type: 3}
+    dropProbability: 0
+  - itemPrefab: {fileID: 967396063219595893, guid: b2f93ad29a69015489bc87ce1197f25a, type: 3}
+    dropProbability: 0
+  - itemPrefab: {fileID: 9174915306103404979, guid: f806672e9d4a2c8469546471df9fb6bf, type: 3}
+    dropProbability: 0
 --- !u!1 &1070194832081281620
 GameObject:
   m_ObjectHideFlags: 0

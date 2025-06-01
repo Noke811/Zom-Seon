@@ -90,16 +90,21 @@ public class ZombieStats : MonoBehaviour, IDamagable
     {
         Debug.Log("[ZombieStats] 좀비 사망 처리 실행");
 
+        // 아이템 드롭
+        GetComponent<ZombieDropper>()?.DropItems();
+
         // 스포너가 연결되어 있으면 풀로 반환, 없으면 비활성화
         if (spawner != null)
-            spawner.ReturnToPool(gameObject, isElite);  // 풀에 다시 넣음
+            spawner.ReturnToPool(gameObject, isElite);
         else
             gameObject.SetActive(false);
     }
-
+    
     // 좀비가 다시 스폰될 때 체력을 초기화
     public void ResetHealth()
     {
         currentHealth = maxHealth;
     }
+    
+    
 }
